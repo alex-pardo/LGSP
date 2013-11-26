@@ -72,6 +72,7 @@ public final class FileReader {
 		
 		
 		ArrayList<Wagon> wagons = parseWagons(text.substring(i1, i2));
+		new SystemWagons(wagons);
 		State initial = parseState(text.substring(i2, i3), wagons);
 		State goal = parseState(text.substring(i3), wagons);
 		
@@ -97,7 +98,7 @@ public final class FileReader {
 		State s = new State(input.substring(0,equal));
 		String data = input.substring(equal+1);
 		for(String p : data.split(";")){
-			s.addPredicate(PredicateCreator.createPredicate(p,w));
+			s.addPredicate(PredicateCreator.createPredicate(p));
 		}
 			
 		return s;

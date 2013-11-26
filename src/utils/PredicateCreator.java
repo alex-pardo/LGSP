@@ -23,7 +23,7 @@ public final class PredicateCreator {
 	public static final String LOADED = "LOADED";
 	public static final String EMPTY = "EMPTY";
 	
-	public static Predicate createPredicate(String name, ArrayList<Wagon> w){
+	public static Predicate createPredicate(String name){
 		int par = name.indexOf('(');
 		String type;
 		String comp;
@@ -35,21 +35,21 @@ public final class PredicateCreator {
 			comp = name.substring(par+1, name.length()-1);
 		}
 		if(type.equals(ON_STATION)){
-			return new OnStation(comp, w);
+			return new OnStation(comp);
 		} else if(type.equals(IN_FRONT_OF)){
-			return new InFrontOf(comp, w);
+			return new InFrontOf(comp);
 		} else if(type.equals(FREE)){
-			return new Free(comp, w);
+			return new Free(comp);
 		} else if(type.equals(FREE_LOCOMOTIVE)){
-			return new FreeLocomotive(comp, w);
+			return new FreeLocomotive(comp);
 		} else if(type.equals(TOWED)){
-			return new Towed(comp, w);
+			return new Towed(comp);
 		} else if(type.equals(USED_RAILWAYS)){
-			return new UsedRailways(comp, w);
+			return new UsedRailways(comp);
 		} else if(type.equals(LOADED)){
-			return new Loaded(comp, w);
+			return new Loaded(comp);
 		} else if(type.equals(EMPTY)){
-			return new Empty(comp, w);
+			return new Empty(comp);
 		} else{
 			return null;
 		}

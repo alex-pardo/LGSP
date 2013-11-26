@@ -11,9 +11,18 @@ public class State {
 		this.name = name;
 		predicates = new ArrayList<Predicate>();
 	}
+	public State(ArrayList<Predicate> p) {
+		predicates = p;
+	}
 	public void addPredicate(Predicate p){
 		predicates.add(p);
 	}
+	
+	public ArrayList<Predicate> getPredicate(){
+		return predicates;
+	}
+	
+	
 	@Override
 	public String toString() {
 		String output = "------------------------------\n" ;

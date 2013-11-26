@@ -17,5 +17,9 @@ public class Wagon extends Constant {
 		return wagon_name.equals(name);
 	}
 	
+	public String getName(){
+		return wagon_name;
+	}
+	
 	
 }

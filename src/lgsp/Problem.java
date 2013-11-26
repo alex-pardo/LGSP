@@ -18,6 +18,10 @@ public class Problem {
 		goal = g;
 		
 	}
+	
+	public State getInitialState(){
+		return initial;
+	}
 
 	@Override
 	public String toString() {
