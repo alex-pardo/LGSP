@@ -2,15 +2,7 @@ package utils;
 
 import java.util.ArrayList;
 
-import operator.Load;
-import predicates.Empty;
-import predicates.Free;
-import predicates.FreeLocomotive;
-import predicates.InFrontOf;
-import predicates.Loaded;
-import predicates.OnStation;
-import predicates.Towed;
-import predicates.UsedRailways;
+
 
 public final class PredicateCreator {
 
@@ -25,33 +17,23 @@ public final class PredicateCreator {
 	
 	public static Predicate createPredicate(String name){
 		int par = name.indexOf('(');
-		String type;
-		String comp;
+		ArrayList<Object> comp = new ArrayList<Object>();
+		String predicate;
 		if( par == -1){
-			type = name;
-			comp = "";
+			predicate = name;
+			comp = null;
 		} else{
-			type = name.substring(0, par);
-			comp = name.substring(par+1, name.length()-1);
+			Wagon tmp;
+			for(String value : name.substring(par+1, name.length()-1).split(",")){
+				if((tmp = SystemWagons.searchWagon(value)) != null){
+					comp.add(tmp);
+				} else{
+					comp.add(value);
+				}
+				
+			}
+			predicate = name.substring(0, par);
 		}
-		if(type.equals(ON_STATION)){
-			return new OnStation(comp);
-		} else if(type.equals(IN_FRONT_OF)){
-			return new InFrontOf(comp);
-		} else if(type.equals(FREE)){
-			return new Free(comp);
-		} else if(type.equals(FREE_LOCOMOTIVE)){
-			return new FreeLocomotive(comp);
-		} else if(type.equals(TOWED)){
-			return new Towed(comp);
-		} else if(type.equals(USED_RAILWAYS)){
-			return new UsedRailways(comp);
-		} else if(type.equals(LOADED)){
-			return new Loaded(comp);
-		} else if(type.equals(EMPTY)){
-			return new Empty(comp);
-		} else{
-			return null;
-		}
+		return new Predicate(predicate, comp);
 	}
 }

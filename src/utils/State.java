@@ -6,6 +6,7 @@ public class State {
 
 	ArrayList<Predicate> predicates;
 	String name;
+	
 	public State(String name){
 		super();
 		this.name = name;

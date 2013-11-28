@@ -10,4 +10,12 @@ public final class SystemWagons {
 		system_wagons = w;
 	}
 	
+	
+	public static Wagon searchWagon(String name){
+		Wagon w = null;
+		for(Wagon tmp : system_wagons){
+			if(tmp.nameEquals(name)){w = tmp;}
+		}
+		return w;
+	}
 }

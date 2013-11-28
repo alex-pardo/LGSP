@@ -1,6 +1,6 @@
 package lgsp;
 
-import operator.Couple;
+
 import utils.FileReader;
 import utils.State;
 import utils.SystemWagons;

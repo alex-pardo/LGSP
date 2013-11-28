@@ -5,69 +5,44 @@ import java.util.List;
 
 public class Predicate {
 
-	private ArrayList<Wagon> applicable_wagons;
 	
-	/**
-	 * 
-	 * @param component
-	 */
+	public static final int ON_STATION = 1;
+	public static final int IN_FRONT_OF = 2;
+	public static final int FREE = 1;
+	public static final int FREE_LOCOMOTIVE = 0;
+	public static final int TOWED = 1;
+	public static final int USED_RAILWAYS = 1;
+	public static final int LOADED = 1;
+	public static final int EMPTY = 1;
+	private static final String[] TYPES = {"ON-STATION", "IN-FRONT-OF", "FREE-LOCOMOTIVE","USED-RAILWAYS","FREE","TOWED","LOADED","EMPTY"};
+	private ArrayList<Object> input;
+	int type = -1;
 	
-	public Predicate(String component){
-		ArrayList<Wagon> all_wagons = SystemWagons.system_wagons;
-		if(component.length() > 2){
-			applicable_wagons = new ArrayList<Wagon>();
-			for(String a_w : component.split(",")){
-				for(Wagon w : all_wagons){
-					if(w.nameEquals(a_w)){
-						applicable_wagons.add(w);
-					}
-				}
-			}
-		} else if(component.length() == 1){
-			applicable_wagons = new ArrayList<Wagon>();
-			for(Wagon w : all_wagons){
-				if(w.nameEquals(component)){
-					applicable_wagons.add(w);
-				}
-			}
+	
+	
+	public Predicate(String name, ArrayList<Object> objects){
+		int i = 0;
+		while(i < TYPES.length && type == -1){
+			String s = TYPES[i];
+			if(s.equals(name)){type = i;}
+			i++;
 		}
-	}
-	
-	
-	public Predicate(ArrayList<Wagon> ws){
-		applicable_wagons = new ArrayList<Wagon>();
-		for(Wagon w : ws){
-			applicable_wagons.add(w);
-		}
-	}
-	
-	public boolean isApplicable(Wagon x){
-		for(Wagon w : applicable_wagons){
-			if(w.nameEquals(x.getName())){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	
-	
-	public ArrayList<Wagon> getWagon() {
-		return applicable_wagons;
+
+		this.input = objects;
 	}
 	
 	
 	
 	@Override
 	public String toString() {
-		String output = this.getClass().getName();
-		if(applicable_wagons != null){
+		String output = TYPES[type];
+		boolean initial = true;
+		if(input != null){
 			output = output.concat("(");
-			boolean first = true;
-			for(Wagon w : applicable_wagons){
-				if(!first){output = output.concat(",");}
-				output = output.concat(w.toString());
-				first = false;
+			for(Object o : input ){
+				if(!initial) output = output.concat(",");
+				output = output.concat(o.toString());
+				initial = false;
 			}
 			output = output.concat(")");
 		}
