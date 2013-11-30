@@ -11,6 +11,12 @@ public class Operator {
 	private ArrayList<Predicate> add;
 	private ArrayList<Predicate> delete;
 	
+	
+	public State apply(State current_state) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }
 
 //
