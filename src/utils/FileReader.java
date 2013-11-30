@@ -16,7 +16,7 @@ public final class FileReader {
 	private static final String INITIAL_STATE = "Initial_state=";
 	private static final String GOAL_STATE = "Goal_state=";
 	
-	private static String filename = "/Users/alexpardofernandez/Dropbox/Uni/master/PAR/practical_ex/problem1.txt";
+	private static String filename = System.getProperty("user.dir")+"/problem1.txt";
 	
 	public static Problem readFile(){
 		
@@ -27,6 +27,7 @@ public final class FileReader {
 		  return parseFile(file);
 		}*/
 		
+		System.out.println("filename");
 		File file = new File(filename);
 		return parseFile(file);
 		//return null;

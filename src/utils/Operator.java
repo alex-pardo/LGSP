@@ -6,7 +6,10 @@ import java.util.ArrayList;
 
 public class Operator {
 
-	
+	private String name;
+	private ArrayList<Predicate> preconditions;
+	private ArrayList<Predicate> add;
+	private ArrayList<Predicate> delete;
 	
 }
 

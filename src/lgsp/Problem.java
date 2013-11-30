@@ -19,6 +19,10 @@ public class Problem {
 		
 	}
 	
+	public State getGoalState(){
+		return goal;
+	}
+	
 	public State getInitialState(){
 		return initial;
 	}

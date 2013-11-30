@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class State {
 
-	ArrayList<Predicate> predicates;
-	String name;
+	private ArrayList<Predicate> predicates;
+	private String name;
 	
 	public State(String name){
 		super();
@@ -23,6 +23,9 @@ public class State {
 		return predicates;
 	}
 	
+	public boolean hasThisPredicate(Predicate p){
+		return predicates.contains(p);
+	}
 	
 	@Override
 	public String toString() {
