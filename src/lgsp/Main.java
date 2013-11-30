@@ -6,7 +6,6 @@ import java.util.Stack;
 
 import utils.FileReader;
 import utils.Operator;
-import utils.OperatorFinder;
 import utils.Predicate;
 import utils.State;
 import utils.SystemWagons;
@@ -40,14 +39,14 @@ public class Main {
 		
 		//While the stack isn't empty
 		while(!stack.isEmpty()){
-			e = stack.remove(0);//Get the top element
+			e = stack.get(0); //Get the top element
 			
 			//Operator
 			if (e instanceof Operator) {
 				Operator o = (Operator) e;
 				//Applicate the operator the current state.
 				//TODO
-				current_state = o.apply(current_state);
+				
 				//Add the operator into the plan
 				plan.add(o);
 				
@@ -57,10 +56,7 @@ public class Main {
 				
 				//The predicate isn't in the current_state
 				if(!current_state.hasThisPredicate(p)){
-					Operator o = OperatorFinder.findOperaator(p);
-					stack.add(o);
-				} else{
-					// do nothing
+					
 				}
 				
 			//ArrayList of the Predicates
@@ -74,7 +70,7 @@ public class Main {
 				}
 				
 				if(!notDisponible.isEmpty()){
-					//stack.add(array);
+					stack.add(array);
 					for(Predicate p : notDisponible) stack.add(p);
 				}
 			}
