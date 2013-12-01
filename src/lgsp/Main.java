@@ -36,6 +36,8 @@ public class Main {
 		stack.add(ef.getPredicate());
 		
 		//Add the predicates of the final state
+		
+		//TODO The order of this subobjective is very importan
 		for (Predicate p : ef.getPredicate()) stack.add(p);
 		Object e = null;
 		
@@ -76,7 +78,14 @@ public class Main {
 					}
 					//Operator o = op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)));
 					
+					//Put the input of the predicate into operator
+					o.setInput(p.getInput());
 					stack.add(o);
+					ArrayList<Predicate> preconditions = o.getPreconditions();
+					stack.add(preconditions);
+					for(Predicate precondition : preconditions){
+						stack.add(precondition);
+					}
 				} else{
 					// do nothing
 				}
@@ -92,7 +101,8 @@ public class Main {
 				}
 				
 				if(!notDisponible.isEmpty()){
-					//stack.add(array);
+					//Add again the ArrayList of predicates
+					stack.add(array);
 					for(Predicate p : notDisponible) stack.add(p);
 				}
 			}
@@ -101,5 +111,10 @@ public class Main {
 		for(Operator o : plan){
 			System.out.println(o);
 		}
+	}
+	
+	
+	private Stack replaceParcialVariable(Stack stack){
+		return stack;
 	}
 }

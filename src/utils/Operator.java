@@ -9,17 +9,12 @@ public class Operator {
 	
 	public static final String[] OPERATOR_LIST = {"COUPLE", "PARK", "DETACH", "ATTACH", "LOAD", "UNLOAD"};
 	
-	
-	
 	private String name;
 	private ArrayList<Predicate> preconditions;
 	private ArrayList<Predicate> add;
 	private ArrayList<Predicate> delete;
 	private int op_type = -1;
-	
-	
-	
-	
+	private ArrayList<Object> input;
 	
 	public Operator(String name){
 		int i = 0;
@@ -54,8 +49,7 @@ public class Operator {
 				delete.add(new Predicate("USED-RAILWAYS", null));
 				
 				add.add(new Predicate("TOWED", null));
-				add.add(new Predicate("USED-RAILWAYS", null));
-				
+				add.add(new Predicate("USED-RAILWAYS", null));	
 				break;
 			
 			case 1:
@@ -73,7 +67,6 @@ public class Operator {
 				add.add(new Predicate("ON-STATION", null));
 				add.add(new Predicate("USED-RAILWAYS", null));
 				add.add(new Predicate("FREE-LOCOMOTIVE", null));
-				
 				break;
 				
 			case 2:
@@ -91,7 +84,6 @@ public class Operator {
 				
 				add.add(new Predicate("TOWED", null));
 				add.add(new Predicate("FREE", null));
-				
 				break;
 				
 			case 3:
@@ -108,7 +100,6 @@ public class Operator {
 				
 				add.add(new Predicate("IN-FRONT-OF", null));
 				add.add(new Predicate("FREE-LOCOMOTIVE", null));
-				
 				break;
 				
 			case 4:
@@ -123,7 +114,6 @@ public class Operator {
 				delete.add(new Predicate("EMPTY", null));
 				
 				add.add(new Predicate("LOADED", null));
-				
 				break;
 				
 			case 5:
@@ -138,7 +128,6 @@ public class Operator {
 				delete.add(new Predicate("LOADED", null));
 				
 				add.add(new Predicate("EMPTY", null));
-				
 				break;
 			
 			default:
@@ -177,6 +166,76 @@ public class Operator {
 			}
 		}
 		return return_val;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public ArrayList<Predicate> getPreconditions() {
+		return preconditions;
+	}
+
+
+	public void setPreconditions(ArrayList<Predicate> preconditions) {
+		this.preconditions = preconditions;
+	}
+
+
+	public ArrayList<Predicate> getAdd() {
+		return add;
+	}
+
+
+	public void setAdd(ArrayList<Predicate> add) {
+		this.add = add;
+	}
+
+
+	public ArrayList<Predicate> getDelete() {
+		return delete;
+	}
+
+
+	public void setDelete(ArrayList<Predicate> delete) {
+		this.delete = delete;
+	}
+
+
+	public int getOp_type() {
+		return op_type;
+	}
+
+
+	public void setOp_type(int op_type) {
+		this.op_type = op_type;
+	}
+
+	public ArrayList<Object> getInput() {
+		return input;
+	}
+
+
+	public void setInput(ArrayList<Object> input) {
+		this.input = input;
+		add = replaceInput(add, input);
+		delete = replaceInput(delete, input);
+		preconditions = replaceInput(preconditions, input);
+	}
+
+	private ArrayList<Predicate> replaceInput(ArrayList<Predicate> list, ArrayList<Object> input){
+		ArrayList<Predicate> tmp = new ArrayList<Predicate>();
+		for(Predicate p: list) {
+			p.setInput(input);
+			tmp.add(p);
+		}
+		return tmp;
 	}
 	
 	@Override
