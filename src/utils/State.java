@@ -42,6 +42,15 @@ public class State {
 		
 		return output;
 	}
+	public void delPredicate(Predicate d) {
+		int pos = -1;
+		for(int i = 0; i < predicates.size(); i++){
+			if(predicates.get(i).equalsName(d.getName())) pos = i;
+		}
+		if(pos > -1){
+			predicates.remove(pos);
+		}
+	}
 	
 	
 }

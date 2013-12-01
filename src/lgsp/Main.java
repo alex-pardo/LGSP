@@ -2,6 +2,7 @@ package lgsp;
 
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Stack;
 
 import utils.FileReader;
@@ -32,15 +33,20 @@ public class Main {
 		
 		//Add the final state in the stack
 		stack.add(ef);
+		stack.add(ef.getPredicate());
+		
 		//Add the predicates of the final state
 		for (Predicate p : ef.getPredicate()) stack.add(p);
 		Object e = null;
 		
+		OperatorFinder operatorFinder = new OperatorFinder(); 
 		
+		
+		//System.out.println(current_state);
 		
 		//While the stack isn't empty
 		while(!stack.isEmpty()){
-			e = stack.remove(0);//Get the top element
+			e = stack.pop();//Get the top element
 			
 			//Operator
 			if (e instanceof Operator) {
@@ -57,7 +63,19 @@ public class Main {
 				
 				//The predicate isn't in the current_state
 				if(!current_state.hasThisPredicate(p)){
-					Operator o = OperatorFinder.findOperaator(p);
+					ArrayList<Operator> op_list = operatorFinder.findOperator(p);
+					//TODO MAKE A DECISION
+					int max_prec = 0;
+					Operator o = op_list.get(0);
+					for(Operator o_tmp : op_list){
+						int tmp = o_tmp.preconditionsAccomplished(current_state);
+						if(tmp > max_prec){
+							max_prec = tmp;
+							o = o_tmp;
+						}
+					}
+					//Operator o = op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)));
+					
 					stack.add(o);
 				} else{
 					// do nothing
@@ -78,6 +96,10 @@ public class Main {
 					for(Predicate p : notDisponible) stack.add(p);
 				}
 			}
+		}
+		
+		for(Operator o : plan){
+			System.out.println(o);
 		}
 	}
 }
