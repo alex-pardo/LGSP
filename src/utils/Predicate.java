@@ -44,12 +44,24 @@ public class Predicate {
 		//if (accepted_inputs[type] > 0){
 		input = new ArrayList<Object>();
 		int i = 0;
-		for(i=0; i<inputNames.size();i++){
+		String name;
+		System.out.println(TYPES[type]);
+		for(i=0; i<names.size();i++){
 			System.out.println("Input"+inputNames);
 			System.out.println("Names"+names);
 			System.out.println("Objects"+objects);
-			if(names.contains(inputNames.get(i))){
-				input.add(objects.get(i));
+			name = names.get(i);
+			if(inputNames.contains(name)){
+				if(name.equals("n")){
+					
+				}else if(name.equals("n+1")){
+					
+				}else if(name.equals("n-1")){
+					
+				}else{
+					input.add(objects.get(i));
+				}
+				
 			}
 		}
 //			
