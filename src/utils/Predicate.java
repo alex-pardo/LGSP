@@ -1,6 +1,7 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Predicate {
@@ -17,14 +18,14 @@ public class Predicate {
 	
 	private static final String[] TYPES = {"ON-STATION", "IN-FRONT-OF", "FREE-LOCOMOTIVE","USED-RAILWAYS","FREE","TOWED","LOADED","EMPTY"};
 	private ArrayList<Object> input = null;
-	private String[] inputNames = null;
+	private List<String> inputNames = null;
 	int type = -1;
 	int max_railways = 3;
 	int used_railways_n = -1;
+	//int[] accepted_inputs = {1, 2, 0, 1, 1, 1, 1, 1};
 	
 	
-	
-	public Predicate(String name, ArrayList<Object> objects){
+	public Predicate(String name, ArrayList<Object> objects, List<String> inputNames){
 		int i = 0;
 		while(i < TYPES.length && type == -1){
 			String s = TYPES[i];
@@ -39,8 +40,24 @@ public class Predicate {
 	}
 	
 	
-	public void Instantiate(ArrayList<Object> objects){
-		this.input = objects;
+	public void Instantiate(ArrayList<Object> objects, List<String> names){
+		//if (accepted_inputs[type] > 0){
+		input = new ArrayList<Object>();
+		int i = 0;
+		for(i=0; i<inputNames.size();i++){
+			System.out.println("Input"+inputNames);
+			System.out.println("Names"+names);
+			System.out.println("Objects"+objects);
+			if(names.contains(inputNames.get(i))){
+				input.add(objects.get(i));
+			}
+		}
+//			
+//			while( i < objects.size() && i < accepted_inputs[type]){
+//			input.add(objects.get(i));
+//				i++;
+//			}
+//		}
 	}
 	
 	public boolean equalsName(String name){
@@ -79,5 +96,70 @@ public class Predicate {
 		}
 		return output;
 	}
+
+
+	public ArrayList<Object> getInstances() {
+		return input;
+	}
+
+	
+	public List<String> getInputNames() {
+		return inputNames;
+	}
+
+
+	public void setInputNames(List<String> inputNames) {
+		this.inputNames = inputNames;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		Predicate p = (Predicate) obj;
+		
+		try {
+			if(this.getName().equals(p.getName())){
+				if(p.getInstances() == null && input == null){
+					return true;
+				}
+				for(Object o1 : p.getInstances()){
+					boolean trobat = false;			
+					for(Object o2 : input){
+						if(o1 instanceof Wagon && o2 instanceof Wagon){
+							if(((Wagon) o1).nameEquals(((Wagon) o2).getName())){ trobat = true;break;}
+						} else if(o1 instanceof Integer && o2 instanceof Integer){
+							if((Integer) o1 == (Integer) o2){ trobat = true; break;} 
+						}else{
+							return false;
+						}
+					}
+					if(!trobat) return false;
+				}
+				
+				for(Object o1 : input){
+					boolean trobat = false;			
+					for(Object o2 : p.getInstances()){
+						if(o1 instanceof Wagon && o2 instanceof Wagon){
+							if(((Wagon) o1).nameEquals(((Wagon) o2).getName())){ trobat = true;break;}
+						} else if(o1 instanceof Integer && o2 instanceof Integer){
+							if((Integer) o1 == (Integer) o2){ trobat = true; break;} 
+						}else{
+							return false;
+						}
+					}
+					if(!trobat) return false;
+				}
+				
+				
+			}else{
+				return false;
+			}
+			return true;
+		} catch (NullPointerException e) {
+			return false;
+		}
+	}
+	
+	
 	
 }

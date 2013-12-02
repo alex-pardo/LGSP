@@ -36,8 +36,6 @@ public class Main {
 		stack.add(ef.getPredicate());
 		
 		//Add the predicates of the final state
-		
-		//TODO The order of this subobjective is very importan
 		for (Predicate p : ef.getPredicate()) stack.add(p);
 		Object e = null;
 		
@@ -53,10 +51,12 @@ public class Main {
 			//Operator
 			if (e instanceof Operator) {
 				Operator o = (Operator) e;
+				//System.out.println("Unstack" + o);
 				//Applicate the operator the current state.
 				//TODO
 				current_state = o.apply(current_state);
 				//Add the operator into the plan
+				System.out.println("Plan: " + o);
 				plan.add(o);
 				
 			//Predicate
@@ -76,15 +76,15 @@ public class Main {
 							o = o_tmp;
 						}
 					}
-					//Operator o = op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)));
+					o = op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)));
+					o.instantiate(p.getInstances(), p.getInputNames());
 					
-					//Put the input of the predicate into operator
-					o.setInput(p.getInput());
+					//System.out.println("Stack " + o);
 					stack.add(o);
-					ArrayList<Predicate> preconditions = o.getPreconditions();
-					stack.add(preconditions);
-					for(Predicate precondition : preconditions){
-						stack.add(precondition);
+					ArrayList<Predicate> tmp = o.getArrayPrecs();
+					stack.add(tmp);
+					for(Predicate prec : tmp){
+						stack.add(prec);
 					}
 				} else{
 					// do nothing
@@ -101,7 +101,6 @@ public class Main {
 				}
 				
 				if(!notDisponible.isEmpty()){
-					//Add again the ArrayList of predicates
 					stack.add(array);
 					for(Predicate p : notDisponible) stack.add(p);
 				}
@@ -111,10 +110,5 @@ public class Main {
 		for(Operator o : plan){
 			System.out.println(o);
 		}
-	}
-	
-	
-	private Stack replaceParcialVariable(Stack stack){
-		return stack;
 	}
 }

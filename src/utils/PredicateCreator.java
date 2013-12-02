@@ -1,6 +1,8 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 
@@ -34,6 +36,38 @@ public final class PredicateCreator {
 			}
 			predicate = name.substring(0, par);
 		}
-		return new Predicate(predicate, comp);
+		
+		//Declarate the possible variables
+        String[] string = new String[]{"x" , "y"};
+		List<String> xy = Arrays.asList(string);
+        string = new String[]{"y"};
+		List<String> y = Arrays.asList(string);
+        string = new String[]{"x"};
+		List<String> x = Arrays.asList(string);
+        string = new String[]{"n"};
+		List<String> n = Arrays.asList(string);
+        string = new String[]{};		
+        List<String> nonVariables = Arrays.asList(string);
+        List<String> inputNames = null;
+        
+        //Assign the name of the variable at each predicate
+		if(predicate.equals("ON-STATION")){
+			inputNames= x;
+		}else if(predicate.equals("IN-FRONT-OF")){
+			inputNames = xy;
+		}else if(predicate.equals("FREE")){
+			inputNames = x;
+		}else if(predicate.equals("FREE-LOCOMOTIVE")){
+			inputNames = nonVariables;
+		}else if(predicate.equals("TOWED")){
+			inputNames = x;
+		}else if(predicate.equals("USED-RAILWAYS")){
+			inputNames = n;
+		}else if(predicate.equals("LOADED")){
+			inputNames = x;
+		}else if(predicate.equals("EMPTY")){
+			inputNames = x; 
+		}
+		return new Predicate(predicate, comp, inputNames);
 	}
 }

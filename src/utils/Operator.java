@@ -1,6 +1,8 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 
@@ -15,6 +17,7 @@ public class Operator {
 	private ArrayList<Predicate> delete;
 	private int op_type = -1;
 	private ArrayList<Object> input;
+	private List<String> inputNames = null;
 	
 	public Operator(String name){
 		int i = 0;
@@ -33,23 +36,42 @@ public class Operator {
 		preconditions = new ArrayList<Predicate>();
 		add = new ArrayList<Predicate>();
 		delete = new ArrayList<Predicate>();
+		
+		//Declarate the possible variables
+        String[] string = new String[]{"x" , "y"};
+		List<String> xy = Arrays.asList(string);
+        string = new String[]{"y"};
+		List<String> y = Arrays.asList(string);
+        string = new String[]{"x"};
+		List<String> x = Arrays.asList(string);
+        string = new String[]{"n"};
+		List<String> n = Arrays.asList(string);
+        string = new String[]{"n+1"};
+		List<String> n1 = Arrays.asList(string);
+        string = new String[]{"n-1"};		
+        List<String> nminus1 = Arrays.asList(string);
+        string = new String[]{};	
+        List<String> nonVariables = Arrays.asList(string);
+		
 		switch(op_type){
 			case 0: 
 				//COUPLE 
 				//Preconditions: USED-RAILWAYS(n), ON-STATION(x), FREE-LOCOMOTIVE, FREE(x)
 				//Eliminate: ON-STATION(x), FREE-LOCOMOTIVE, USED-RAILWAYS(n)
 				//Add: TOWED(x), USED-RAILWAYS(n-1)
-				preconditions.add(new Predicate("USED-RAILWAYS", null));
-				preconditions.add(new Predicate("ON-STATION", null));
-				preconditions.add(new Predicate("FREE-LOCOMOTIVE", null));
-				preconditions.add(new Predicate("FREE", null));
+				inputNames = x;
 				
-				delete.add(new Predicate("ON-STATION", null));
-				delete.add(new Predicate("FREE-LOCOMOTIVE", null));
-				delete.add(new Predicate("USED-RAILWAYS", null));
+				preconditions.add(new Predicate("USED-RAILWAYS", null, n));
+				preconditions.add(new Predicate("ON-STATION", null, x));
+				preconditions.add(new Predicate("FREE-LOCOMOTIVE", null, nonVariables));
+				preconditions.add(new Predicate("FREE", null, x));
 				
-				add.add(new Predicate("TOWED", null));
-				add.add(new Predicate("USED-RAILWAYS", null));	
+				delete.add(new Predicate("ON-STATION", null, x));
+				delete.add(new Predicate("FREE-LOCOMOTIVE", null, nonVariables));
+				delete.add(new Predicate("USED-RAILWAYS", null, n));
+				
+				add.add(new Predicate("TOWED", null, x));
+				add.add(new Predicate("USED-RAILWAYS", null, nminus1));	
 				break;
 			
 			case 1:
@@ -57,16 +79,17 @@ public class Operator {
 				// Preconditions: TOWED(x), USED-RAILWAYS(n), n<max-railways
 				// Eliminate: TOWED(x), USED-RAILWAYS(n)
 				// Add: ON-STATION(x), USED-RAILWAYS(n+1), FREE-LOCOMOTIVE
+				inputNames = x;
 				
-				preconditions.add(new Predicate("TOWED", null));
-				preconditions.add(new Predicate("USED-RAILWAYS", null));
+				preconditions.add(new Predicate("TOWED", null, x));
+				preconditions.add(new Predicate("USED-RAILWAYS", null, n));
 				
-				delete.add(new Predicate("TOWED", null));
-				delete.add(new Predicate("USED-RAILWAYS", null));
+				delete.add(new Predicate("TOWED", null, x));
+				delete.add(new Predicate("USED-RAILWAYS", null, n));
 				
-				add.add(new Predicate("ON-STATION", null));
-				add.add(new Predicate("USED-RAILWAYS", null));
-				add.add(new Predicate("FREE-LOCOMOTIVE", null));
+				add.add(new Predicate("ON-STATION", null, x));
+				add.add(new Predicate("USED-RAILWAYS", null, n1));
+				add.add(new Predicate("FREE-LOCOMOTIVE", null, nonVariables));
 				break;
 				
 			case 2:
@@ -74,16 +97,17 @@ public class Operator {
 				// Preconditions: IN-FRONT-OF(x,y), FREE(x), FREE-LOCOMOTIVE
 				// Eliminate: IN-FRONT-OF(x,y), FREE-LOCOMOTIVE
 				// Add: TOWED(x), FREE(y)
+				inputNames = xy;
 				
-				preconditions.add(new Predicate("IN-FRONT-OF", null));
-				preconditions.add(new Predicate("FREE", null));
-				preconditions.add(new Predicate("FREE-LOCOMOTIVE", null));
+				preconditions.add(new Predicate("IN-FRONT-OF", null, xy));
+				preconditions.add(new Predicate("FREE", null, x));
+				preconditions.add(new Predicate("FREE-LOCOMOTIVE", null, nonVariables));
 				
-				delete.add(new Predicate("IN-FRONT-OF", null));
-				delete.add(new Predicate("FREE-LOCOMOTIVE", null));
+				delete.add(new Predicate("IN-FRONT-OF", null, xy));
+				delete.add(new Predicate("FREE-LOCOMOTIVE", null, nonVariables));
 				
-				add.add(new Predicate("TOWED", null));
-				add.add(new Predicate("FREE", null));
+				add.add(new Predicate("TOWED", null, x));
+				add.add(new Predicate("FREE", null, y));
 				break;
 				
 			case 3:
@@ -91,15 +115,16 @@ public class Operator {
 				// Preconditions: TOWED(x), FREE(y)
 				// Eliminate: TOWED(x), FREE(y)
 				// Add: IN-FRONT-OF(x,y), FREE-LOCOMOTIVE
+				inputNames = xy;
 				
-				preconditions.add(new Predicate("TOWED", null));
-				preconditions.add(new Predicate("FREE", null));
+				preconditions.add(new Predicate("TOWED", null, x));
+				preconditions.add(new Predicate("FREE", null, y));
 				
-				delete.add(new Predicate("TOWED", null));
-				delete.add(new Predicate("FREE", null));
+				delete.add(new Predicate("TOWED", null, x));
+				delete.add(new Predicate("FREE", null, y));
 				
-				add.add(new Predicate("IN-FRONT-OF", null));
-				add.add(new Predicate("FREE-LOCOMOTIVE", null));
+				add.add(new Predicate("IN-FRONT-OF", null, xy));
+				add.add(new Predicate("FREE-LOCOMOTIVE", null, nonVariables));
 				break;
 				
 			case 4:
@@ -107,13 +132,14 @@ public class Operator {
 				// Preconditions: ON-STATION(x), EMPTY(x)
 				// Eliminate: EMPTY(x)
 				// Add: LOADED(x)
+				inputNames = x;
 				
-				preconditions.add(new Predicate("ON-STATION", null));
-				preconditions.add(new Predicate("EMPTY", null));
+				preconditions.add(new Predicate("ON-STATION", null, x));
+				preconditions.add(new Predicate("EMPTY", null, x));
 				
-				delete.add(new Predicate("EMPTY", null));
+				delete.add(new Predicate("EMPTY", null, x));
 				
-				add.add(new Predicate("LOADED", null));
+				add.add(new Predicate("LOADED", null, x));
 				break;
 				
 			case 5:
@@ -121,17 +147,17 @@ public class Operator {
 				// Preconditions: ON-STATION(x), LOADED(x)
 				// Eliminate: LOADED(x)
 				// Add: EMPTY(x)
+				inputNames = x;
 				
-				preconditions.add(new Predicate("ON-STATION", null));
-				preconditions.add(new Predicate("LOADED", null));
+				preconditions.add(new Predicate("ON-STATION", null, x));
+				preconditions.add(new Predicate("LOADED", null, x));
 				
-				delete.add(new Predicate("LOADED", null));
+				delete.add(new Predicate("LOADED", null, x));
 				
-				add.add(new Predicate("EMPTY", null));
+				add.add(new Predicate("EMPTY", null, x));
 				break;
 			
 			default:
-				
 				break;
 		}
 		
@@ -240,7 +266,41 @@ public class Operator {
 	
 	@Override
 	public String toString(){
-		return name;
+		String out = name;
+		if(input != null){
+			out = out.concat("(");
+			boolean first = true;
+			for(Object o : input){
+				if(!first) out = out.concat(",");
+				out = out.concat(o.toString());
+				first = false;
+			}
+			out = out.concat(")");
+		}
+		return out;
+	}
+
+
+	public void instantiate(ArrayList<Object> instances, List<String> inputNames) {
+		input = instances;
+		for(Predicate prec : preconditions){
+			prec.Instantiate(instances, inputNames);
+		}
+		
+		for(Predicate a : add){
+			a.Instantiate(instances, inputNames);
+		}
+		
+		for(Predicate d : delete){
+			d.Instantiate(instances, inputNames);
+		}
+		
+	}
+
+
+	public ArrayList<Predicate> getArrayPrecs() {
+		
+		return preconditions;
 	}
 	
 }
