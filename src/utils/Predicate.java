@@ -19,6 +19,7 @@ public class Predicate {
 	int type = -1;
 	int max_railways = 3;
 	int used_railways_n = -1;
+	int[] accepted_inputs = {1, 2, 0, 1, 1, 1, 1, 1};
 	
 	
 	
@@ -37,7 +38,14 @@ public class Predicate {
 	
 	
 	public void Instantiate(ArrayList<Object> objects){
-		this.input = objects;
+		if (accepted_inputs[type] > 0){
+			input = new ArrayList<Object>();
+			int i = 0;
+			while( i < objects.size() && i < accepted_inputs[type]){
+				input.add(objects.get(i));
+				i++;
+			}
+		}
 	}
 	
 	public boolean equalsName(String name){
@@ -65,5 +73,60 @@ public class Predicate {
 		}
 		return output;
 	}
+
+
+	public ArrayList<Object> getInstances() {
+		return input;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		Predicate p = (Predicate) obj;
+		
+		try {
+			if(this.getName().equals(p.getName())){
+				if(p.getInstances() == null && input == null){
+					return true;
+				}
+				for(Object o1 : p.getInstances()){
+					boolean trobat = false;			
+					for(Object o2 : input){
+						if(o1 instanceof Wagon && o2 instanceof Wagon){
+							if(((Wagon) o1).nameEquals(((Wagon) o2).getName())){ trobat = true;break;}
+						} else if(o1 instanceof Integer && o2 instanceof Integer){
+							if((Integer) o1 == (Integer) o2){ trobat = true; break;} 
+						}else{
+							return false;
+						}
+					}
+					if(!trobat) return false;
+				}
+				
+				for(Object o1 : input){
+					boolean trobat = false;			
+					for(Object o2 : p.getInstances()){
+						if(o1 instanceof Wagon && o2 instanceof Wagon){
+							if(((Wagon) o1).nameEquals(((Wagon) o2).getName())){ trobat = true;break;}
+						} else if(o1 instanceof Integer && o2 instanceof Integer){
+							if((Integer) o1 == (Integer) o2){ trobat = true; break;} 
+						}else{
+							return false;
+						}
+					}
+					if(!trobat) return false;
+				}
+				
+				
+			}else{
+				return false;
+			}
+			return true;
+		} catch (NullPointerException e) {
+			return false;
+		}
+	}
+	
+	
 	
 }

@@ -51,10 +51,12 @@ public class Main {
 			//Operator
 			if (e instanceof Operator) {
 				Operator o = (Operator) e;
+				//System.out.println("Unstack" + o);
 				//Applicate the operator the current state.
 				//TODO
 				current_state = o.apply(current_state);
 				//Add the operator into the plan
+				System.out.println("Plan: " + o);
 				plan.add(o);
 				
 			//Predicate
@@ -74,9 +76,16 @@ public class Main {
 							o = o_tmp;
 						}
 					}
-					//Operator o = op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)));
+					o = op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)));
+					o.instantiate(p.getInstances());
 					
+					//System.out.println("Stack " + o);
 					stack.add(o);
+					ArrayList<Predicate> tmp = o.getArrayPrecs();
+					stack.add(tmp);
+					for(Predicate prec : tmp){
+						stack.add(prec);
+					}
 				} else{
 					// do nothing
 				}
@@ -92,7 +101,7 @@ public class Main {
 				}
 				
 				if(!notDisponible.isEmpty()){
-					//stack.add(array);
+					stack.add(array);
 					for(Predicate p : notDisponible) stack.add(p);
 				}
 			}

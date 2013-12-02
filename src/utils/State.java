@@ -24,7 +24,10 @@ public class State {
 	}
 	
 	public boolean hasThisPredicate(Predicate p){
-		return predicates.contains(p);
+		for(Predicate pred : predicates){
+			if(pred.equals(p)) return true;
+		}
+		return false;
 	}
 	
 	@Override
@@ -45,7 +48,7 @@ public class State {
 	public void delPredicate(Predicate d) {
 		int pos = -1;
 		for(int i = 0; i < predicates.size(); i++){
-			if(predicates.get(i).equalsName(d.getName())) pos = i;
+			if(predicates.get(i).equals(d)) pos = i;
 		}
 		if(pos > -1){
 			predicates.remove(pos);

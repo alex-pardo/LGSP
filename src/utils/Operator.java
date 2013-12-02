@@ -16,7 +16,7 @@ public class Operator {
 	private ArrayList<Predicate> add;
 	private ArrayList<Predicate> delete;
 	private int op_type = -1;
-	
+	private ArrayList<Object> input;
 	
 	
 	
@@ -181,7 +181,41 @@ public class Operator {
 	
 	@Override
 	public String toString(){
-		return name;
+		String out = name;
+		if(input != null){
+			out = out.concat("(");
+			boolean first = true;
+			for(Object o : input){
+				if(!first) out = out.concat(",");
+				out = out.concat(o.toString());
+				first = false;
+			}
+			out = out.concat(")");
+		}
+		return out;
+	}
+
+
+	public void instantiate(ArrayList<Object> instances) {
+		input = instances;
+		for(Predicate prec : preconditions){
+			prec.Instantiate(instances);
+		}
+		
+		for(Predicate a : add){
+			a.Instantiate(instances);
+		}
+		
+		for(Predicate d : delete){
+			d.Instantiate(instances);
+		}
+		
+	}
+
+
+	public ArrayList<Predicate> getArrayPrecs() {
+		
+		return preconditions;
 	}
 	
 }
