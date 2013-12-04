@@ -16,7 +16,7 @@ public class Operator {
 	private ArrayList<Predicate> add;
 	private ArrayList<Predicate> delete;
 	private int op_type = -1;
-	private ArrayList<Object> input;
+	private ArrayList<Object> input = null;
 	private List<String> inputNames = null;
 	public static List<String> xy;
 	public static List<String> y;
@@ -298,7 +298,11 @@ public class Operator {
 			boolean first = true;
 			for(Object o : input){
 				if(!first) out = out.concat(",");
-				out = out.concat(o.toString());
+				try{
+					out = out.concat(o.toString());
+				} catch(Exception e){
+					System.out.println(name);
+				}
 				first = false;
 			}
 			out = out.concat(")");
@@ -306,24 +310,18 @@ public class Operator {
 		return out;
 	}
 	
+	@Override
+	public Object clone(){
+		return new Operator(this.name);
+	}
 	
 	public void instantiate(ArrayList<Object> instances, List<String> names, State sf){
-		ArrayList<Object> instantiation_array =  new ArrayList<Object>();
-		ArrayList<Wagon> not_assigned = new ArrayList<Wagon>();
-		for(Wagon tmp : SystemWagons.system_wagons){not_assigned.add(tmp);}
-		
-		if(instances != null && instances.size() == needed_objects[op_type]){
-			for(int i = 0; i < instances.size(); i++){
-				if(((String)names.get(i)).equals("x")){
-					instantiation_array.add(0, instances.get(i));
-					not_assigned.remove(instances.get(i));
-				} else if (!((String)names.get(i)).contains("n")){
-					instantiation_array.add(instances.get(i));
-					not_assigned.remove(instances.get(i));
-				}
-			}
-		}else{
-			if(instances != null){
+		if(input == null){
+			ArrayList<Object> instantiation_array =  new ArrayList<Object>();
+			ArrayList<Wagon> not_assigned = new ArrayList<Wagon>();
+			for(Wagon tmp : SystemWagons.system_wagons){not_assigned.add(tmp);}
+			
+			if(instances != null && instances.size() == needed_objects[op_type]){
 				for(int i = 0; i < instances.size(); i++){
 					if(((String)names.get(i)).equals("x")){
 						instantiation_array.add(0, instances.get(i));
@@ -333,57 +331,27 @@ public class Operator {
 						not_assigned.remove(instances.get(i));
 					}
 				}
-			}
-			
-			int max_wagon = 0;
-			Wagon best = null;
-			
-			switch(op_type){
-			case 0: 
-				//COUPLE 
-				//Preconditions: USED-RAILWAYS(n), ON-STATION(x), FREE-LOCOMOTIVE, FREE(x)
-				//Eliminate: ON-STATION(x), FREE-LOCOMOTIVE, USED-RAILWAYS(n)
-				//Add: TOWED(x), USED-RAILWAYS(n-1)
-				
-				for(Wagon w : not_assigned){
-					int tmp_counter = 0;
-					for(Predicate a : add){
-						Predicate tmp = sf.getPredicate(a);
-						if(tmp == null) continue;
-						for(Object o : tmp.getInstances()){
-							if(((Wagon) o).nameEquals(w.getName())) tmp_counter++;
+			}else{
+				if(instances != null){
+					for(int i = 0; i < instances.size(); i++){
+						if(((String)names.get(i)).equals("x")){
+							instantiation_array.add(0, instances.get(i));
+							not_assigned.remove(instances.get(i));
+						} else if (!((String)names.get(i)).contains("n")){
+							instantiation_array.add(instances.get(i));
+							not_assigned.remove(instances.get(i));
 						}
 					}
-					if(tmp_counter > max_wagon){
-						max_wagon = tmp_counter;
-						best = (Wagon) w.clone();
-					}
-					
 				}
 				
-				instantiation_array.add(best);
-				
-				break;
-			
-			case 1:
-				//PARK
-				// Preconditions: TOWED(x), USED-RAILWAYS(n), n<max-railways
-				// Eliminate: TOWED(x), USED-RAILWAYS(n)
-				// Add: ON-STATION(x), USED-RAILWAYS(n+1), FREE-LOCOMOTIVE
-				
-				break;
-				
-			case 2:
-				// DETACH
-				// Preconditions: IN-FRONT-OF(x,y), FREE(x), FREE-LOCOMOTIVE
-				// Eliminate: IN-FRONT-OF(x,y), FREE-LOCOMOTIVE
-				// Add: TOWED(x), FREE(y)
+				int max_wagon = 0;
+				Wagon best = null;
 				while(instantiation_array.size() < needed_objects[op_type]){
 					for(Wagon w : not_assigned){
 						int tmp_counter = 0;
 						for(Predicate a : add){
 							Predicate tmp = sf.getPredicate(a);
-							if(tmp == null) continue;
+							if(tmp == null || tmp.getInstances() == null) continue;
 							for(Object o : tmp.getInstances()){
 								if(((Wagon) o).nameEquals(w.getName())) tmp_counter++;
 							}
@@ -397,70 +365,24 @@ public class Operator {
 					
 					instantiation_array.add(best);
 					not_assigned.remove(best);
+					max_wagon = 0;
+					best = null;
 				}
-				
-				break;
-				
-			case 3:
-				// ATTACH
-				// Preconditions: TOWED(x), FREE(y)
-				// Eliminate: TOWED(x), FREE(y)
-				// Add: IN-FRONT-OF(x,y), FREE-LOCOMOTIVE
-				
-				break;
-				
-			case 4:
-				// LOAD
-				// Preconditions: ON-STATION(x), EMPTY(x)
-				// Eliminate: EMPTY(x)
-				// Add: LOADED(x)
-				for(Wagon w : not_assigned){
-					int tmp_counter = 0;
-					for(Predicate a : add){
-						Predicate tmp = sf.getPredicate(a);
-						if(tmp == null) continue;
-						for(Object o : tmp.getInstances()){
-							if(((Wagon) o).nameEquals(w.getName())) tmp_counter++;
-						}
-					}
-					if(tmp_counter > max_wagon){
-						max_wagon = tmp_counter;
-						best = (Wagon) w.clone();
-					}
-					
-				}
-				
-				instantiation_array.add(best);
-				
-				break;
-				
-			case 5:
-				// UNLOAD
-				// Preconditions: ON-STATION(x), LOADED(x)
-				// Eliminate: LOADED(x)
-				// Add: EMPTY(x)
-				
-				
-				
-				
-				break;
-			
-			default:
-				break;
 			}
+			input = instantiation_array;
 		}
 		
 		
 		for(Predicate prec : preconditions){
-			prec.Instantiate(instantiation_array);
+			prec.Instantiate(input);
 		}
 		
 		for(Predicate a : add){
-			a.Instantiate(instantiation_array);
+			a.Instantiate(input);
 		}
 		
 		for(Predicate d : delete){
-			d.Instantiate(instantiation_array);
+			d.Instantiate(input);
 		}
 		
 		

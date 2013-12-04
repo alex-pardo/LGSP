@@ -71,18 +71,18 @@ public class Main {
 					ArrayList<Operator> op_list = operatorFinder.findOperator(p);
 					//TODO MAKE A DECISION
 					int max_prec = 0;
-					Operator o = op_list.get(0);
+					Operator o = (Operator) op_list.get(0).clone();
 					for(Operator o_tmp : op_list){
 						int tmp = o_tmp.preconditionsAccomplished(current_state);
 						if(tmp > max_prec){
 							max_prec = tmp;
-							o = o_tmp;
+							o = (Operator) o_tmp.clone();
 						}
 					}
-					o = op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)));
+					o = (Operator) (op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)))).clone();
 					o.instantiate(p.getInstances(), p.getInputNames(), current_state);
 					
-					//System.out.println("Stack " + o);
+					System.out.println("Stack " + o);
 					stack.add(o);
 					ArrayList<Predicate> tmp = o.getArrayPrecs();
 					stack.add(tmp);

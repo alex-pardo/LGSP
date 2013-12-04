@@ -13,6 +13,13 @@ public class Wagon extends Constant {
 		return wagon_name;
 	}
 	
+	
+	
+	@Override
+	public boolean equals(Object obj) {		
+		return wagon_name.equals(((Wagon)obj).getName());
+	}
+
 	public boolean nameEquals(String name){
 		return wagon_name.equals(name);
 	}

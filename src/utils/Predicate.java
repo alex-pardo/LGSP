@@ -43,15 +43,30 @@ public class Predicate {
 		this.inputNames = inputNames;
 	}
 	
-	
+	/**
+	 * Replaces the instantiation
+	 * @param objects
+	 */
 	public void Instantiate(ArrayList<Object> objects){
-		this.input = objects;
+		if(type < 8 && type != 3){
+			input = new ArrayList<Object>();
+			int i = 0;
+			while(i < objects.size() && input.size() < accepted_inputs[type]){
+				input.add(objects.get(i));
+				i++;
+			}
+		}
 	}
 	
+	/**
+	 * append instances
+	 * @param objects
+	 */
 	public void addInstance(ArrayList<Object> objects){
-		int i = 0;
+		int i = input.size()-1;
 		while(i < objects.size() && input.size() < accepted_inputs[type]){
 			input.add(objects.get(i));
+			i++;
 		}
 	}
 	
