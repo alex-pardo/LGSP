@@ -16,11 +16,15 @@ public class Predicate {
 	public static final int LOADED = 1;
 	public static final int EMPTY = 1;
 	
-	private static final String[] TYPES = {"ON-STATION", "IN-FRONT-OF", "FREE-LOCOMOTIVE","USED-RAILWAYS","FREE","TOWED","LOADED","EMPTY"};
+	
+	private static final String[] TYPES = {"ON-STATION", "IN-FRONT-OF", "FREE-LOCOMOTIVE","USED-RAILWAYS","FREE","TOWED","LOADED","EMPTY", "N<MAX"};
 	private ArrayList<Object> input = null;
 	private List<String> inputNames = null;
+	public static final String PLUS = "n+1";
+	public static final String MINUS = "n-1";
+	public static final String EQUALS = "n";
+	public static final int MAX_RAILWAYS = 3;
 	int type = -1;
-	int max_railways = 3;
 	int used_railways_n = -1;
 	//int[] accepted_inputs = {1, 2, 0, 1, 1, 1, 1, 1};
 	
@@ -40,36 +44,41 @@ public class Predicate {
 	}
 	
 	
-	public void Instantiate(ArrayList<Object> objects, List<String> names){
+	public void Instantiate(ArrayList<Object> objects, List<String> names, State s){
 		//if (accepted_inputs[type] > 0){
 		input = new ArrayList<Object>();
 		int i = 0;
+		int max_accomplished = 0;
+		int best_object = -1;
 		String name;
 		System.out.println(TYPES[type]);
+		ArrayList<String> not_assigned = new ArrayList<String>();
+		for(String tmp : inputNames){not_assigned.add(tmp);}
 		for(i=0; i<names.size();i++){
 			System.out.println("Input"+inputNames);
 			System.out.println("Names"+names);
 			System.out.println("Objects"+objects);
 			name = names.get(i);
-			if(inputNames.contains(name)){
-				if(name.equals("n")){
-					
-				}else if(name.equals("n+1")){
-					
-				}else if(name.equals("n-1")){
-					
-				}else{
-					input.add(objects.get(i));
-				}
-				
-			}
+			if(inputNames.contains(name) && !name.equals("n") && !name.equals("n+1") && !name.equals("n-1")){
+				input.add(objects.get(i));
+				not_assigned.remove(name);
+			} 
 		}
-//			
-//			while( i < objects.size() && i < accepted_inputs[type]){
-//			input.add(objects.get(i));
-//				i++;
-//			}
-//		}
+		if(not_assigned.size() == 1){
+			// find the best object using add and final state predicates
+			
+		}else if(not_assigned.size() > 1){ 
+			// generate combinations
+			// find the best combination using add and final state predicates
+			
+		}
+	}
+	
+	private List[] generateCombinations(ArrayList<Object> objects){
+		
+		
+		return null;
+		
 	}
 	
 	public boolean equalsName(String name){

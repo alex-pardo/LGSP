@@ -18,6 +18,14 @@ public class Operator {
 	private int op_type = -1;
 	private ArrayList<Object> input;
 	private List<String> inputNames = null;
+	public static List<String> xy;
+	public static List<String> y;
+	public static List<String> x;
+	public static List<String> n;
+	public static List<String> n1;
+	public static List<String> nminus1;
+	public static List<String> nonVariables;
+	
 	
 	public Operator(String name){
 		int i = 0;
@@ -39,19 +47,19 @@ public class Operator {
 		
 		//Declarate the possible variables
         String[] string = new String[]{"x" , "y"};
-		List<String> xy = Arrays.asList(string);
+		xy = Arrays.asList(string);
         string = new String[]{"y"};
-		List<String> y = Arrays.asList(string);
+		y = Arrays.asList(string);
         string = new String[]{"x"};
-		List<String> x = Arrays.asList(string);
+		x = Arrays.asList(string);
         string = new String[]{"n"};
-		List<String> n = Arrays.asList(string);
+		n = Arrays.asList(string);
         string = new String[]{"n+1"};
-		List<String> n1 = Arrays.asList(string);
+		n1 = Arrays.asList(string);
         string = new String[]{"n-1"};		
-        List<String> nminus1 = Arrays.asList(string);
+        nminus1 = Arrays.asList(string);
         string = new String[]{};	
-        List<String> nonVariables = Arrays.asList(string);
+        nonVariables = Arrays.asList(string);
 		
 		switch(op_type){
 			case 0: 
@@ -83,6 +91,7 @@ public class Operator {
 				
 				preconditions.add(new Predicate("TOWED", null, x));
 				preconditions.add(new Predicate("USED-RAILWAYS", null, n));
+				preconditions.add(new Predicate("N<MAX", null, nonVariables));
 				
 				delete.add(new Predicate("TOWED", null, x));
 				delete.add(new Predicate("USED-RAILWAYS", null, n));
@@ -173,6 +182,15 @@ public class Operator {
 	public State apply(State current_state) {
 		
 		for(Predicate a : add){
+			if(a.getName().equals(Predicate.USED_RAILWAYS)){
+				for(String s : a.getInputNames()){
+					if(s.equals(Predicate.PLUS)){
+						current_state.increaseN();
+					}else if(s.equals(Predicate.MINUS)){
+						current_state.decreaseN();
+					}
+				}
+			}
 			current_state.addPredicate(a);
 		}
 		
@@ -188,11 +206,19 @@ public class Operator {
 		int return_val = 0;
 		for(Predicate p : s.getPredicate()){
 			for(Predicate prec : preconditions){
-				if(prec.equalsName(p.getName()))return_val ++;
+				if(prec.equalsName("N<MAX")){
+					if(s.railwaysLower(Predicate.MAX_RAILWAYS)){
+						return_val ++;
+					}
+				}else if(prec.equalsName(p.getName())){
+					return_val ++;
+				} 
+
 			}
 		}
 		return return_val;
 	}
+
 	
 	public String getName() {
 		return name;
@@ -281,18 +307,49 @@ public class Operator {
 	}
 
 
-	public void instantiate(ArrayList<Object> instances, List<String> inputNames) {
-		input = instances;
+	public void instantiate(ArrayList<Object> instances, List<String> names, State s) {
+		//input = instances;
+		
+		
+		
+		ArrayList<Tuple<String, Wagon>> assignements = new ArrayList<Operator.Tuple<String,Wagon>>();
+		input = new ArrayList<Object>();
+		int i = 0;
+		int max_accomplished = 0;
+		int best_object = -1;
+		String name;
+		ArrayList<Wagon> not_assigned = new ArrayList<Wagon>();
+		for(Wagon tmp : SystemWagons.system_wagons){not_assigned.add(tmp);}
+		for(i=0; i<names.size();i++){
+			name = names.get(i);
+			if(inputNames.contains(name) && !name.equals("n") && !name.equals("n+1") && !name.equals("n-1")){
+				assignements.add(new Tuple<String, Wagon>(name, (Wagon)instances.get(i)));
+				not_assigned.remove((Wagon)instances.get(i));
+			} 
+		}
+		if(not_assigned.size() == 1){
+			// find the best object using add and final state predicates
+			for(Predicate a : add){
+				if(s.hasInstantiatedPredicate(a, not_assigned.get(0))){
+					//add ++ in the a predicate counter
+				}
+			}
+		}else if(not_assigned.size() > 1){ 
+			// generate combinations
+			// find the best combination using add and final state predicates
+			
+		}
+		
 		for(Predicate prec : preconditions){
-			prec.Instantiate(instances, inputNames);
+			prec.Instantiate(instances, inputNames, s);
 		}
 		
 		for(Predicate a : add){
-			a.Instantiate(instances, inputNames);
+			a.Instantiate(instances, inputNames, s);
 		}
 		
 		for(Predicate d : delete){
-			d.Instantiate(instances, inputNames);
+			d.Instantiate(instances, inputNames, s);
 		}
 		
 	}
@@ -302,6 +359,17 @@ public class Operator {
 		
 		return preconditions;
 	}
+	
+	
+	public class Tuple<X, Y> { 
+		  public final X x; 
+		  public final Y y; 
+		  public Tuple(X x, Y y) { 
+		    this.x = x; 
+		    this.y = y; 
+		  } 
+		} 
+	
 	
 }
 

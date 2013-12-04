@@ -96,7 +96,7 @@ public final class FileReader {
 	private static State parseState(String input, ArrayList<Wagon> w){
 		
 		int equal = input.indexOf("=");
-		State s = new State(input.substring(0,equal));
+		State s = new State(input.substring(0,equal),3);
 		String data = input.substring(equal+1);
 		for(String p : data.split(";")){
 			s.addPredicate(PredicateCreator.createPredicate(p));
