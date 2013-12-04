@@ -21,5 +21,10 @@ public class Wagon extends Constant {
 		return wagon_name;
 	}
 	
+	@Override
+	public Object clone(){
+		return new Wagon(this.wagon_name);
+	}
+	
 	
 }

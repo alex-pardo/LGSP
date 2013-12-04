@@ -26,7 +26,7 @@ public class Predicate {
 	public static final int MAX_RAILWAYS = 3;
 	int type = -1;
 	int used_railways_n = -1;
-	//int[] accepted_inputs = {1, 2, 0, 1, 1, 1, 1, 1};
+	int[] accepted_inputs = {1, 2, 0, 1, 1, 1, 1, 1};
 	
 	
 	public Predicate(String name, ArrayList<Object> objects, List<String> inputNames){
@@ -44,42 +44,17 @@ public class Predicate {
 	}
 	
 	
-	public void Instantiate(ArrayList<Object> objects, List<String> names, State s){
-		//if (accepted_inputs[type] > 0){
-		input = new ArrayList<Object>();
+	public void Instantiate(ArrayList<Object> objects){
+		this.input = objects;
+	}
+	
+	public void addInstance(ArrayList<Object> objects){
 		int i = 0;
-		int max_accomplished = 0;
-		int best_object = -1;
-		String name;
-		System.out.println(TYPES[type]);
-		ArrayList<String> not_assigned = new ArrayList<String>();
-		for(String tmp : inputNames){not_assigned.add(tmp);}
-		for(i=0; i<names.size();i++){
-			System.out.println("Input"+inputNames);
-			System.out.println("Names"+names);
-			System.out.println("Objects"+objects);
-			name = names.get(i);
-			if(inputNames.contains(name) && !name.equals("n") && !name.equals("n+1") && !name.equals("n-1")){
-				input.add(objects.get(i));
-				not_assigned.remove(name);
-			} 
-		}
-		if(not_assigned.size() == 1){
-			// find the best object using add and final state predicates
-			
-		}else if(not_assigned.size() > 1){ 
-			// generate combinations
-			// find the best combination using add and final state predicates
-			
+		while(i < objects.size() && input.size() < accepted_inputs[type]){
+			input.add(objects.get(i));
 		}
 	}
 	
-	private List[] generateCombinations(ArrayList<Object> objects){
-		
-		
-		return null;
-		
-	}
 	
 	public boolean equalsName(String name){
 		return TYPES[type].equals(name);
@@ -181,6 +156,9 @@ public class Predicate {
 		}
 	}
 	
-	
+	@Override
+	public Object clone(){
+		return new Predicate(this.getName(), this.input, this.inputNames);
+	}
 	
 }

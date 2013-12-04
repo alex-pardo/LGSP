@@ -76,5 +76,12 @@ public class State {
 		
 	}
 	
+	public Predicate getPredicate(Predicate a){
+		for(Predicate tmp : predicates){
+			if(tmp.equalsName(a.getName())) return tmp; 
+		}
+		return null;
+	}
+	
 	
 }

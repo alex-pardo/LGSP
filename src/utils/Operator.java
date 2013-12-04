@@ -10,7 +10,7 @@ public class Operator {
 
 	
 	public static final String[] OPERATOR_LIST = {"COUPLE", "PARK", "DETACH", "ATTACH", "LOAD", "UNLOAD"};
-	
+	private static final int[] needed_objects = {1,1,2, 2,1,1};
 	private String name;
 	private ArrayList<Predicate> preconditions;
 	private ArrayList<Predicate> add;
@@ -305,12 +305,172 @@ public class Operator {
 		}
 		return out;
 	}
+	
+	
+	public void instantiate(ArrayList<Object> instances, List<String> names, State sf){
+		ArrayList<Object> instantiation_array =  new ArrayList<Object>();
+		ArrayList<Wagon> not_assigned = new ArrayList<Wagon>();
+		for(Wagon tmp : SystemWagons.system_wagons){not_assigned.add(tmp);}
+		
+		if(instances != null && instances.size() == needed_objects[op_type]){
+			for(int i = 0; i < instances.size(); i++){
+				if(((String)names.get(i)).equals("x")){
+					instantiation_array.add(0, instances.get(i));
+					not_assigned.remove(instances.get(i));
+				} else if (!((String)names.get(i)).contains("n")){
+					instantiation_array.add(instances.get(i));
+					not_assigned.remove(instances.get(i));
+				}
+			}
+		}else{
+			if(instances != null){
+				for(int i = 0; i < instances.size(); i++){
+					if(((String)names.get(i)).equals("x")){
+						instantiation_array.add(0, instances.get(i));
+						not_assigned.remove(instances.get(i));
+					} else if (!((String)names.get(i)).contains("n")){
+						instantiation_array.add(instances.get(i));
+						not_assigned.remove(instances.get(i));
+					}
+				}
+			}
+			
+			int max_wagon = 0;
+			Wagon best = null;
+			
+			switch(op_type){
+			case 0: 
+				//COUPLE 
+				//Preconditions: USED-RAILWAYS(n), ON-STATION(x), FREE-LOCOMOTIVE, FREE(x)
+				//Eliminate: ON-STATION(x), FREE-LOCOMOTIVE, USED-RAILWAYS(n)
+				//Add: TOWED(x), USED-RAILWAYS(n-1)
+				
+				for(Wagon w : not_assigned){
+					int tmp_counter = 0;
+					for(Predicate a : add){
+						Predicate tmp = sf.getPredicate(a);
+						if(tmp == null) continue;
+						for(Object o : tmp.getInstances()){
+							if(((Wagon) o).nameEquals(w.getName())) tmp_counter++;
+						}
+					}
+					if(tmp_counter > max_wagon){
+						max_wagon = tmp_counter;
+						best = (Wagon) w.clone();
+					}
+					
+				}
+				
+				instantiation_array.add(best);
+				
+				break;
+			
+			case 1:
+				//PARK
+				// Preconditions: TOWED(x), USED-RAILWAYS(n), n<max-railways
+				// Eliminate: TOWED(x), USED-RAILWAYS(n)
+				// Add: ON-STATION(x), USED-RAILWAYS(n+1), FREE-LOCOMOTIVE
+				
+				break;
+				
+			case 2:
+				// DETACH
+				// Preconditions: IN-FRONT-OF(x,y), FREE(x), FREE-LOCOMOTIVE
+				// Eliminate: IN-FRONT-OF(x,y), FREE-LOCOMOTIVE
+				// Add: TOWED(x), FREE(y)
+				while(instantiation_array.size() < needed_objects[op_type]){
+					for(Wagon w : not_assigned){
+						int tmp_counter = 0;
+						for(Predicate a : add){
+							Predicate tmp = sf.getPredicate(a);
+							if(tmp == null) continue;
+							for(Object o : tmp.getInstances()){
+								if(((Wagon) o).nameEquals(w.getName())) tmp_counter++;
+							}
+						}
+						if(tmp_counter > max_wagon){
+							max_wagon = tmp_counter;
+							best = (Wagon) w.clone();
+						}
+						
+					}
+					
+					instantiation_array.add(best);
+					not_assigned.remove(best);
+				}
+				
+				break;
+				
+			case 3:
+				// ATTACH
+				// Preconditions: TOWED(x), FREE(y)
+				// Eliminate: TOWED(x), FREE(y)
+				// Add: IN-FRONT-OF(x,y), FREE-LOCOMOTIVE
+				
+				break;
+				
+			case 4:
+				// LOAD
+				// Preconditions: ON-STATION(x), EMPTY(x)
+				// Eliminate: EMPTY(x)
+				// Add: LOADED(x)
+				for(Wagon w : not_assigned){
+					int tmp_counter = 0;
+					for(Predicate a : add){
+						Predicate tmp = sf.getPredicate(a);
+						if(tmp == null) continue;
+						for(Object o : tmp.getInstances()){
+							if(((Wagon) o).nameEquals(w.getName())) tmp_counter++;
+						}
+					}
+					if(tmp_counter > max_wagon){
+						max_wagon = tmp_counter;
+						best = (Wagon) w.clone();
+					}
+					
+				}
+				
+				instantiation_array.add(best);
+				
+				break;
+				
+			case 5:
+				// UNLOAD
+				// Preconditions: ON-STATION(x), LOADED(x)
+				// Eliminate: LOADED(x)
+				// Add: EMPTY(x)
+				
+				
+				
+				
+				break;
+			
+			default:
+				break;
+			}
+		}
+		
+		
+		for(Predicate prec : preconditions){
+			prec.Instantiate(instantiation_array);
+		}
+		
+		for(Predicate a : add){
+			a.Instantiate(instantiation_array);
+		}
+		
+		for(Predicate d : delete){
+			d.Instantiate(instantiation_array);
+		}
+		
+		
+	}
 
-
-	public void instantiate(ArrayList<Object> instances, List<String> names, State s) {
+/*
+	public void instantiate(ArrayList<Object> instances, List<String> names, State sf) {
 		//input = instances;
 		
-		
+		//assign the instances we already know
 		
 		ArrayList<Tuple<String, Wagon>> assignements = new ArrayList<Operator.Tuple<String,Wagon>>();
 		input = new ArrayList<Object>();
@@ -327,18 +487,23 @@ public class Operator {
 				not_assigned.remove((Wagon)instances.get(i));
 			} 
 		}
-		if(not_assigned.size() == 1){
-			// find the best object using add and final state predicates
+		
+		
+		// check the best instance for each variable
+		while(assignements.size() < needed_objects[op_type]){
 			for(Predicate a : add){
-				if(s.hasInstantiatedPredicate(a, not_assigned.get(0))){
-					//add ++ in the a predicate counter
+				ArrayList<Predicate> final_pred = sf.getPredicate();
+				Predicate tmp = (Predicate) a.clone();
+				for(Wagon w : not_assigned){
+					
+					
 				}
+				
 			}
-		}else if(not_assigned.size() > 1){ 
-			// generate combinations
-			// find the best combination using add and final state predicates
+			
 			
 		}
+		
 		
 		for(Predicate prec : preconditions){
 			prec.Instantiate(instances, inputNames, s);
@@ -354,7 +519,7 @@ public class Operator {
 		
 	}
 
-
+*/
 	public ArrayList<Predicate> getArrayPrecs() {
 		
 		return preconditions;
