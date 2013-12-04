@@ -65,6 +65,9 @@ public class Main {
 				
 				//The predicate isn't in the current_state
 				if(!current_state.hasThisPredicate(p)){
+					if(p.equalsName("N<MAX")){
+						p = new Predicate("USED-RAILWAYS", null, Operator.nminus1);	
+					}
 					ArrayList<Operator> op_list = operatorFinder.findOperator(p);
 					//TODO MAKE A DECISION
 					int max_prec = 0;
@@ -77,7 +80,7 @@ public class Main {
 						}
 					}
 					o = op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)));
-					o.instantiate(p.getInstances(), p.getInputNames());
+					o.instantiate(p.getInstances(), p.getInputNames(), current_state);
 					
 					//System.out.println("Stack " + o);
 					stack.add(o);

@@ -6,10 +6,11 @@ public class State {
 
 	private ArrayList<Predicate> predicates;
 	private String name;
+	private int used_railways; 
 	
-	public State(String name){
-		super();
+	public State(String name, int used_railways){
 		this.name = name;
+		this.used_railways = used_railways;
 		predicates = new ArrayList<Predicate>();
 	}
 	public State(ArrayList<Predicate> p) {
@@ -28,6 +29,22 @@ public class State {
 			if(pred.equals(p)) return true;
 		}
 		return false;
+	}
+	
+	public boolean hasNRailways(int n){
+		return n == used_railways;
+	}
+	
+	public boolean railwaysLower(int n){
+		return n < used_railways;
+	}
+	
+	public void increaseN(){
+		used_railways++;
+	}
+	
+	public void decreaseN(){
+		used_railways--;
 	}
 	
 	@Override
@@ -53,6 +70,10 @@ public class State {
 		if(pos > -1){
 			predicates.remove(pos);
 		}
+	}
+	public void hasInstantiatedPredicate(Predicate a, Wagon wagon) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
