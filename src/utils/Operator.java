@@ -148,6 +148,7 @@ public class Operator {
 				
 				add.add(new Predicate("IN-FRONT-OF", null, xy));
 				add.add(new Predicate("FREE-LOCOMOTIVE", null, nonVariables));
+				
 				break;
 				
 			case 4:
@@ -331,16 +332,21 @@ public class Operator {
 	
 	public void instantiate(ArrayList<Object> instances, List<String> names, State s){
 		if(input == null){
+			
 			ArrayList<Object> instantiation_array =  new ArrayList<Object>();
+			for(int i = 0; i < needed_objects[op_type] ; i++) instantiation_array.add(null);
+			
 			ArrayList<Wagon> not_assigned = new ArrayList<Wagon>();
 			for(Wagon tmp : SystemWagons.system_wagons){not_assigned.add(tmp);}
 			
 			if(instances != null && instances.size() == needed_objects[op_type]){
 				for(int i = 0; i < instances.size(); i++){
 					if(((String)names.get(i)).equals("x")){
+						instantiation_array.remove(0);
 						instantiation_array.add(0, instances.get(i));
 						not_assigned.remove(instances.get(i));
 					} else if (!((String)names.get(i)).contains("n")){
+						instantiation_array.remove(1);
 						instantiation_array.add(instances.get(i));
 						not_assigned.remove(instances.get(i));
 					}
@@ -349,10 +355,11 @@ public class Operator {
 				if(instances != null){
 					for(int i = 0; i < instances.size(); i++){
 						if(((String)names.get(i)).equals("x")){
+							instantiation_array.remove(0);
 							instantiation_array.add(0, instances.get(i));
 							not_assigned.remove(instances.get(i));
 						} else if (!((String)names.get(i)).contains("n")){
-							instantiation_array.add(null);
+							instantiation_array.remove(1);
 							instantiation_array.add(instances.get(i));
 							not_assigned.remove(instances.get(i));
 						}
@@ -361,7 +368,55 @@ public class Operator {
 				
 				int max_wagon = 0;
 				Wagon best = null;
-				while(instantiation_array.size() < needed_objects[op_type]){
+				
+				for(int i = 0; i < instantiation_array.size(); i++){
+					if(instantiation_array.get(i) == null){
+					
+						for(Wagon w : not_assigned){
+							
+							int tmp_counter = 0;
+							for(Predicate a : preconditions){
+								
+								ArrayList<Predicate> matches = s.getPredicate(a);
+								for(Predicate tmp : matches){
+									if(tmp == null || tmp.getInstances() == null) continue;
+									if(tmp.equalsName(a.getName())){
+										for(Object o : tmp.getInstances()){
+											if(((Wagon) o).nameEquals(w.getName())) tmp_counter++;
+										}
+									}
+									
+									
+								}
+								
+							}
+							if(tmp_counter > max_wagon){
+								max_wagon = tmp_counter;
+								best = (Wagon) w.clone();
+							}
+							
+						}
+	
+						if(best == null){
+							int tmp = 0 + (int)(Math.random() * (((not_assigned.size())-1 - 0) + 1));
+							instantiation_array.remove(i);
+							instantiation_array.add(i,not_assigned.get(tmp));
+							not_assigned.remove(tmp);
+						} else{
+							instantiation_array.remove(i);
+							instantiation_array.add(i,best);
+							not_assigned.remove(best);
+						}
+						max_wagon = 0;
+						best = null;
+					}
+				}
+			}
+			input = instantiation_array;
+			/*for(int i = 0; i < input.size(); i++){
+				if(input.get(i) == null){
+					int max_wagon = 0;
+					Wagon best = null;
 					for(Wagon w : not_assigned){
 						int tmp_counter = 0;
 						for(Predicate a : preconditions){
@@ -378,21 +433,11 @@ public class Operator {
 						
 					}
 					
-					instantiation_array.add(best);
-					not_assigned.remove(best);
-					max_wagon = 0;
-					best = null;
+					
+					
+					
 				}
-			}
-			input = instantiation_array;
-			for(int i = 0; i < input.size(); i++){
-				if(input.get(i) == null){
-					int tmp = 0 + (int)(Math.random() * (((not_assigned.size())-1 - 0) + 1));
-					input.remove(i);
-					input.add(i,not_assigned.get(tmp));
-					not_assigned.remove(tmp);
-				}
-			}
+			}*/
 			
 		}
 		
@@ -449,8 +494,11 @@ public class Operator {
 			}
 			
 			for(Predicate a : add){
-				if(a.getName().equals("FREE")) a.Instantiate(input.get(1));
-				a.Instantiate(input);
+				if(a.getName().equals("FREE")){
+					a.Instantiate(input.get(1));
+				}else{
+					a.Instantiate(input);
+				}
 			}
 			
 			for(Predicate d : delete){
@@ -465,8 +513,11 @@ public class Operator {
 			// Eliminate: TOWED(x), FREE(y)
 			// Add: IN-FRONT-OF(x,y), FREE-LOCOMOTIVE
 			for(Predicate prec : preconditions){
-				if(prec.getName().equals("FREE")) prec.Instantiate(input.get(1));
-				prec.Instantiate(input);
+				if(prec.getName().equals("FREE")){
+					prec.Instantiate(input.get(1));
+				}else{
+					prec.Instantiate(input);
+				}
 			}
 			
 			for(Predicate a : add){
@@ -474,8 +525,12 @@ public class Operator {
 			}
 			
 			for(Predicate d : delete){
-				if(d.getName().equals("FREE")) d.Instantiate(input.get(1));
-				d.Instantiate(input);
+				if(d.getName().equals("FREE")){
+					d.Instantiate(input.get(1));
+				} else{
+					d.Instantiate(input);
+				}
+				
 			}
 			break;
 			

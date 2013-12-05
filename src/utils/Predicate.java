@@ -48,7 +48,7 @@ public class Predicate {
 	 * @param objects
 	 */
 	public void Instantiate(ArrayList<Object> objects){
-		if(type < 8 && type != 3){
+		if(type < 8 && type != 3 && type != 2){
 			input = new ArrayList<Object>();
 			int i = 0;
 			while(i < objects.size() && input.size() < accepted_inputs[type]){

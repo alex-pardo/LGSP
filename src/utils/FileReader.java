@@ -26,8 +26,6 @@ public final class FileReader {
 		  file = fileChooser.getSelectedFile();
 		  return parseFile(file);
 		}*/
-		
-		System.out.println("filename");
 		File file = new File(filename);
 		return parseFile(file);
 		//return null;

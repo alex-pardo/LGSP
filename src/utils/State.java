@@ -89,5 +89,10 @@ public class State {
 		return out;
 	}
 	
-	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 }
