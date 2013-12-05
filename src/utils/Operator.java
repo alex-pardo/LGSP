@@ -40,6 +40,20 @@ public class Operator {
 	}
 	
 	
+	@Override
+	public boolean equals(Object o){
+		boolean val = true;
+		if(((Operator)o).getName().equals(this.name)){
+			for(Object tmp : ((Operator)o).getInput()){
+				if(!this.input.contains(tmp)) val = false;
+			}
+		}else{
+			val = false;
+		}
+		
+		return val;
+	}
+	
 	private void constructLists() {
 		preconditions = new ArrayList<Predicate>();
 		add = new ArrayList<Predicate>();
@@ -370,20 +384,141 @@ public class Operator {
 				}
 			}
 			input = instantiation_array;
+			for(int i = 0; i < input.size(); i++){
+				if(input.get(i) == null){
+					int tmp = 0 + (int)(Math.random() * (((not_assigned.size())-1 - 0) + 1));
+					input.remove(i);
+					input.add(i,not_assigned.get(tmp));
+					not_assigned.remove(tmp);
+				}
+			}
+			
 		}
 		
 		
-		for(Predicate prec : preconditions){
-			prec.Instantiate(input);
-		}
+		switch(op_type){
+		case 0: 
+			//COUPLE 
+			//Preconditions: USED-RAILWAYS(n), ON-STATION(x), FREE-LOCOMOTIVE, FREE(x)
+			//Eliminate: ON-STATION(x), FREE-LOCOMOTIVE, USED-RAILWAYS(n)
+			//Add: TOWED(x), USED-RAILWAYS(n-1)
+			
+			for(Predicate prec : preconditions){
+				prec.Instantiate(input);
+			}
+			
+			for(Predicate a : add){
+				a.Instantiate(input);
+			}
+			
+			for(Predicate d : delete){
+				d.Instantiate(input);
+			}
+			
+			break;
 		
-		for(Predicate a : add){
-			a.Instantiate(input);
-		}
+		case 1:
+			//PARK
+			// Preconditions: TOWED(x), USED-RAILWAYS(n), n<max-railways
+			// Eliminate: TOWED(x), USED-RAILWAYS(n)
+			// Add: ON-STATION(x), USED-RAILWAYS(n+1), FREE-LOCOMOTIVE
+			
+			for(Predicate prec : preconditions){
+				prec.Instantiate(input);
+			}
+			
+			for(Predicate a : add){
+				a.Instantiate(input);
+			}
+			
+			for(Predicate d : delete){
+				d.Instantiate(input);
+			}
+			
+			break;
+			
+		case 2:
+			// DETACH
+			// Preconditions: IN-FRONT-OF(x,y), FREE(x), FREE-LOCOMOTIVE
+			// Eliminate: IN-FRONT-OF(x,y), FREE-LOCOMOTIVE
+			// Add: TOWED(x), FREE(y)
+			
+			for(Predicate prec : preconditions){
+				prec.Instantiate(input);
+			}
+			
+			for(Predicate a : add){
+				if(a.getName().equals("FREE")) a.Instantiate(input.get(1));
+				a.Instantiate(input);
+			}
+			
+			for(Predicate d : delete){
+				d.Instantiate(input);
+			}
+			
+			break;
+			
+		case 3:
+			// ATTACH
+			// Preconditions: TOWED(x), FREE(y)
+			// Eliminate: TOWED(x), FREE(y)
+			// Add: IN-FRONT-OF(x,y), FREE-LOCOMOTIVE
+			for(Predicate prec : preconditions){
+				if(prec.getName().equals("FREE")) prec.Instantiate(input.get(1));
+				prec.Instantiate(input);
+			}
+			
+			for(Predicate a : add){
+				a.Instantiate(input);
+			}
+			
+			for(Predicate d : delete){
+				if(d.getName().equals("FREE")) d.Instantiate(input.get(1));
+				d.Instantiate(input);
+			}
+			break;
+			
+		case 4:
+			// LOAD
+			// Preconditions: ON-STATION(x), EMPTY(x)
+			// Eliminate: EMPTY(x)
+			// Add: LOADED(x)
+			for(Predicate prec : preconditions){
+				prec.Instantiate(input);
+			}
+			
+			for(Predicate a : add){
+				a.Instantiate(input);
+			}
+			
+			for(Predicate d : delete){
+				d.Instantiate(input);
+			}
+			break;
+			
+		case 5:
+			// UNLOAD
+			// Preconditions: ON-STATION(x), LOADED(x)
+			// Eliminate: LOADED(x)
+			// Add: EMPTY(x)
+			for(Predicate prec : preconditions){
+				prec.Instantiate(input);
+			}
+			
+			for(Predicate a : add){
+				a.Instantiate(input);
+			}
+			
+			for(Predicate d : delete){
+				d.Instantiate(input);
+			}
+			break;
 		
-		for(Predicate d : delete){
-			d.Instantiate(input);
-		}
+		default:
+			break;
+	}
+		
+		
 		
 		
 	}

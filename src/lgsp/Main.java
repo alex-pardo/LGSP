@@ -1,9 +1,12 @@
 package lgsp;
 
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
+
+import com.sun.xml.internal.stream.util.BufferAllocator;
 
 import utils.FileReader;
 import utils.Operator;
@@ -13,6 +16,7 @@ import utils.State;
 import utils.SystemWagons;
 public class Main {
 
+	private static final int MAX_MEMORY = 6;
 	/**
 	 * @param args
 	 */
@@ -30,7 +34,7 @@ public class Main {
 		
 		//Create the plan
 		ArrayList<Operator> plan = new ArrayList<Operator>();
-		
+		ArrayList<Object> last_used = new ArrayList<Object>();
 		//Add the final state in the stack
 		stack.add(ef);
 		stack.add(ef.getPredicate());
@@ -72,18 +76,32 @@ public class Main {
 					//TODO MAKE A DECISION
 					int max_prec = 0;
 					Operator o = (Operator) op_list.get(0).clone();
+					ArrayList<Operator> sorted_list = new ArrayList<Operator>();
+					//do{
 					for(Operator o_tmp : op_list){
-						int tmp = o_tmp.preconditionsAccomplished(current_state);
-						if(tmp > max_prec){
-							max_prec = tmp;
-							o = (Operator) o_tmp.clone();
-						}
+						
+							int tmp = o_tmp.preconditionsAccomplished(ef);
+							tmp += o_tmp.preconditionsAccomplished(current_state);
+							if(tmp > max_prec){
+								max_prec = tmp;
+								o = (Operator) o_tmp.clone();
+								sorted_list.add(0, (Operator) o_tmp.clone());
+							} else{
+								sorted_list.add((Operator) o_tmp.clone());
+							}
 					}
 					o = (Operator) (op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)))).clone();
-					o.instantiate(p.getInstances(), p.getInputNames(), current_state);
-					
+					do{
+						o = sorted_list.remove(0);
+						o.instantiate(p.getInstances(), p.getInputNames(), ef);
+					}while(last_used.contains(o) && sorted_list.size() > 0);
 					System.out.println("Stack " + o);
 					stack.add(o);
+					if(last_used.size() >= MAX_MEMORY){
+						last_used.remove(0);
+					} 
+					last_used.add(o);
+					
 					ArrayList<Predicate> tmp = o.getArrayPrecs();
 					stack.add(tmp);
 					for(Predicate prec : tmp){

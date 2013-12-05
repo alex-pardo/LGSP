@@ -58,6 +58,16 @@ public class Predicate {
 		}
 	}
 	
+	public void Instantiate(Object object){
+		if(type < 8 && type != 3){
+			input = new ArrayList<Object>();
+			if(input.size() < accepted_inputs[type]){
+				input.add(object);
+			}
+		}
+	}
+	
+	
 	/**
 	 * append instances
 	 * @param objects
