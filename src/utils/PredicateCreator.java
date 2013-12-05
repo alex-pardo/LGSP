@@ -56,7 +56,7 @@ public final class PredicateCreator {
 		}else if(predicate.equals("IN-FRONT-OF")){
 			inputNames = xy;
 		}else if(predicate.equals("FREE")){
-			inputNames = x;
+			inputNames = y;
 		}else if(predicate.equals("FREE-LOCOMOTIVE")){
 			inputNames = nonVariables;
 		}else if(predicate.equals("TOWED")){

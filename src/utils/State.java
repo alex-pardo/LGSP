@@ -25,6 +25,11 @@ public class State {
 	}
 	
 	public boolean hasThisPredicate(Predicate p){
+		
+		if(p.getName().equals("USED-RAILWAYS")){
+			return true;
+		}
+		
 		for(Predicate pred : predicates){
 			if(pred.equals(p)) return true;
 		}
@@ -76,11 +81,12 @@ public class State {
 		
 	}
 	
-	public Predicate getPredicate(Predicate a){
+	public ArrayList<Predicate> getPredicate(Predicate a){
+		ArrayList<Predicate> out = new ArrayList<Predicate>();
 		for(Predicate tmp : predicates){
-			if(tmp.equalsName(a.getName())) return tmp; 
+			if(tmp.equalsName(a.getName())) out.add(tmp); 
 		}
-		return null;
+		return out;
 	}
 	
 	

@@ -66,8 +66,9 @@ public class Main {
 			//Predicate
 			}else if(e instanceof Predicate) {
 				Predicate p = (Predicate) e;
-				System.out.println("Unstack: " + p);
+				//System.out.println("Unstack: " + p);
 				//The predicate isn't in the current_state
+				
 				if(!current_state.hasThisPredicate(p)){
 					if(p.equalsName("N<MAX")){
 						p = new Predicate("USED-RAILWAYS", null, Operator.nminus1);	
@@ -81,7 +82,6 @@ public class Main {
 					for(Operator o_tmp : op_list){
 						
 							int tmp = o_tmp.preconditionsAccomplished(ef);
-							//tmp += o_tmp.preconditionsAccomplished(current_state);
 							if(tmp > max_prec){
 								max_prec = tmp;
 								o = (Operator) o_tmp.clone();
@@ -90,13 +90,13 @@ public class Main {
 								sorted_list.add((Operator) o_tmp.clone());
 							}
 					}
-					o = (Operator) (op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)))).clone();
+					//o = (Operator) (op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)))).clone();
 					do{
 						o = sorted_list.remove(0);
 						o.instantiate(p.getInstances(), p.getInputNames(), current_state);
-						System.out.println("testing with: " + o);
+						//System.out.println("testing with: " + o);
 					}while(last_used.contains(o) && sorted_list.size() > 0);
-					System.out.println("Stack " + o);
+					//System.out.println("Stack " + o);
 					stack.add(o);
 					if(last_used.size() >= MAX_MEMORY){
 						last_used.remove(0);
