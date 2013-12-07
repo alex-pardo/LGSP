@@ -3,6 +3,7 @@ package utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 
 
@@ -330,7 +331,7 @@ public class Operator {
 		return new Operator(this.name);
 	}
 	
-	public void instantiate(ArrayList<Object> instances, List<String> names, State s){
+	public void instantiate(ArrayList<Object> instances, List<String> names, Stack<Object> s, State curr){
 		if(input == null){
 			
 			ArrayList<Object> instantiation_array =  new ArrayList<Object>();
@@ -377,16 +378,27 @@ public class Operator {
 							int tmp_counter = 0;
 							for(Predicate a : preconditions){
 								
-								ArrayList<Predicate> matches = s.getPredicate(a);
-								for(Predicate tmp : matches){
+								for(Predicate tmp : curr.getPredicate()){
 									if(tmp == null || tmp.getInstances() == null) continue;
 									if(tmp.equalsName(a.getName())){
 										for(Object o : tmp.getInstances()){
-											if(((Wagon) o).nameEquals(w.getName())) tmp_counter++;
+											if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1;
 										}
 									}
+								}
+
+								for(Object element : s){
 									
-									
+									if(element instanceof Predicate){
+										Predicate tmp = (Predicate) element;
+										if(tmp == null || tmp.getInstances() == null) continue;
+										if(tmp.equalsName(a.getName())){
+											for(Object o : tmp.getInstances()){
+												if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1;
+											}
+										}
+									}
+																		
 								}
 								
 							}
@@ -398,6 +410,7 @@ public class Operator {
 						}
 	
 						if(best == null){
+							System.out.println("RANDOM");
 							int tmp = 0 + (int)(Math.random() * (((not_assigned.size())-1 - 0) + 1));
 							instantiation_array.remove(i);
 							instantiation_array.add(i,not_assigned.get(tmp));
@@ -413,31 +426,7 @@ public class Operator {
 				}
 			}
 			input = instantiation_array;
-			/*for(int i = 0; i < input.size(); i++){
-				if(input.get(i) == null){
-					int max_wagon = 0;
-					Wagon best = null;
-					for(Wagon w : not_assigned){
-						int tmp_counter = 0;
-						for(Predicate a : preconditions){
-							Predicate tmp = s.getPredicate(a);
-							if(tmp == null || tmp.getInstances() == null) continue;
-							for(Object o : tmp.getInstances()){
-								if(((Wagon) o).nameEquals(w.getName())) tmp_counter++;
-							}
-						}
-						if(tmp_counter > max_wagon){
-							max_wagon = tmp_counter;
-							best = (Wagon) w.clone();
-						}
-						
-					}
-					
-					
-					
-					
-				}
-			}*/
+			
 			
 		}
 		
@@ -579,60 +568,7 @@ public class Operator {
 		
 	}
 
-/*
-	public void instantiate(ArrayList<Object> instances, List<String> names, State sf) {
-		//input = instances;
-		
-		//assign the instances we already know
-		
-		ArrayList<Tuple<String, Wagon>> assignements = new ArrayList<Operator.Tuple<String,Wagon>>();
-		input = new ArrayList<Object>();
-		int i = 0;
-		int max_accomplished = 0;
-		int best_object = -1;
-		String name;
-		ArrayList<Wagon> not_assigned = new ArrayList<Wagon>();
-		for(Wagon tmp : SystemWagons.system_wagons){not_assigned.add(tmp);}
-		for(i=0; i<names.size();i++){
-			name = names.get(i);
-			if(inputNames.contains(name) && !name.equals("n") && !name.equals("n+1") && !name.equals("n-1")){
-				assignements.add(new Tuple<String, Wagon>(name, (Wagon)instances.get(i)));
-				not_assigned.remove((Wagon)instances.get(i));
-			} 
-		}
-		
-		
-		// check the best instance for each variable
-		while(assignements.size() < needed_objects[op_type]){
-			for(Predicate a : add){
-				ArrayList<Predicate> final_pred = sf.getPredicate();
-				Predicate tmp = (Predicate) a.clone();
-				for(Wagon w : not_assigned){
-					
-					
-				}
-				
-			}
-			
-			
-		}
-		
-		
-		for(Predicate prec : preconditions){
-			prec.Instantiate(instances, inputNames, s);
-		}
-		
-		for(Predicate a : add){
-			a.Instantiate(instances, inputNames, s);
-		}
-		
-		for(Predicate d : delete){
-			d.Instantiate(instances, inputNames, s);
-		}
-		
-	}
 
-*/
 	public ArrayList<Predicate> getArrayPrecs() {
 		
 		return preconditions;
@@ -651,64 +587,3 @@ public class Operator {
 	
 }
 
-//
-//public boolean checkPreconditions(State s, Wagon w, int n){
-//	boolean[] precs = {false, false, false, false};
-//	
-//	ArrayList<Predicate> predicates = s.getPredicate();
-//	
-//	for(Predicate p : predicates){
-//		if(p.getClass().getName().equals(UsedRailways.class.getName())){
-//			if(((UsedRailways)p).compareRailways(n)){
-//				precs[0] = true;
-//			}
-//		}else if(p.getClass().getName().equals(OnStation.class.getName())){
-//			if(p.isApplicable(w)){
-//				precs[1] = true;
-//			}
-//		}else if(p.getClass().getName().equals(FreeLocomotive.class.getName())){
-//			precs[2] = true;
-//		}
-//		else if(p.getClass().getName().equals(Free.class.getName())){
-//			if(p.isApplicable(w)){
-//				precs[3] = true;
-//			}
-//		}
-//	}
-//	
-//	for(boolean p : precs){ if(!p){return false;} }
-//	
-//	return true;
-//}
-//
-//
-//public State applyOperator(State s, Wagon w){
-//	ArrayList<Predicate> predicates = s.getPredicate();
-//	UsedRailways usedRails = null;
-//	OnStation onStation = null;
-//	FreeLocomotive freeLoco = null;
-//	Free free = null;
-//	for(Predicate p : predicates){
-//		if(p.getClass().getName().equals(UsedRailways.class.getName())){
-//			usedRails = (UsedRailways) p;
-//		}else if(p.getClass().getName().equals(OnStation.class.getName())){
-//			onStation = (OnStation) p;
-//		}else if(p.getClass().getName().equals(FreeLocomotive.class.getName())){
-//			freeLoco = (FreeLocomotive) p;
-//		}
-//		else if(p.getClass().getName().equals(Free.class.getName())){
-//			free = (Free) p;
-//		}
-//	}  
-//	
-//	
-//	int n = usedRails.getRailways();
-//	usedRails.decreaseRailways();
-//	ArrayList<Predicate> after = new ArrayList<Predicate>(); 
-//	after.add(usedRails);
-//	ArrayList<Wagon> tmp = new ArrayList<Wagon>();
-//	tmp.add(w);
-//	after.add(new Towed(tmp));
-//	s = new State(after);
-//	return s;
-//}

@@ -16,7 +16,7 @@ import utils.State;
 import utils.SystemWagons;
 public class Main {
 
-	private static final int MAX_MEMORY = 6;
+	private static final int MAX_MEMORY = 3;
 	private static int numStates = 0;
 	/**
 	 * @param args
@@ -63,11 +63,12 @@ public class Main {
 				//TODO
 				current_state = o.apply(current_state);
 				//Add the operator into the plan
-				System.out.println("Applaying plan: " + o);
+				System.out.println("Applying plan: " + o);
 				plan.add(o);
 				numStates++;
 				current_state.setName(String.valueOf(numStates));
-				System.out.println(current_state+"\n\n");
+				//System.out.println(current_state+"\n\n");
+				//System.out.println("Stack: \n"+ stack);
 				
 			//Predicate
 			}else if(e instanceof Predicate) {
@@ -99,7 +100,7 @@ public class Main {
 					//o = (Operator) (op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)))).clone();
 					do{
 						o = sorted_list.remove(0);
-						o.instantiate(p.getInstances(), p.getInputNames(), current_state);
+						o.instantiate(p.getInstances(), p.getInputNames(), stack, current_state);
 						//System.out.println("testing with: " + o);
 					}while(last_used.contains(o) && sorted_list.size() > 0);
 					//System.out.println("Stack " + o);
