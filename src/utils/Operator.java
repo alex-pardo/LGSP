@@ -198,7 +198,7 @@ public class Operator {
 	public State apply(State current_state) {
 		
 		for(Predicate a : add){
-			if(a.getName().equals(Predicate.USED_RAILWAYS)){
+			if(a.getName().equals("USED-RAILWAYS")){
 				for(String s : a.getInputNames()){
 					if(s.equals(Predicate.PLUS)){
 						current_state.increaseN();
@@ -220,16 +220,18 @@ public class Operator {
 	
 	public int preconditionsAccomplished(State s){
 		int return_val = 0;
-		for(Predicate p : s.getPredicate()){
-			for(Predicate prec : preconditions){
-				if(prec.equalsName("N<MAX")){
-					if(s.railwaysLower(Predicate.MAX_RAILWAYS)){
-						return_val ++;
-					}
-				}else if(prec.equalsName(p.getName())){
+		for(Predicate prec : preconditions){
+			if(prec.equalsName("N<MAX")){
+				if(s.railwaysLower(Predicate.MAX_RAILWAYS)){
 					return_val ++;
-				} 
+				}
+			}else{
+				for(Predicate p : s.getPredicate()){
+					if(prec.equalsName(p.getName())){
+						return_val ++;
+					} 
 
+				}
 			}
 		}
 		return return_val;
@@ -331,7 +333,7 @@ public class Operator {
 		return new Operator(this.name);
 	}
 	
-	public void instantiate(ArrayList<Object> instances, List<String> names, Stack<Object> s, State curr){
+	public void instantiate(ArrayList<Object> instances, List<String> names, Stack<Object> s, State curr, ArrayList<Operator> plan){
 		if(input == null){
 			
 			ArrayList<Object> instantiation_array =  new ArrayList<Object>();
@@ -371,10 +373,60 @@ public class Operator {
 				Wagon best = null;
 				
 				for(int i = 0; i < instantiation_array.size(); i++){
-					if(instantiation_array.get(i) == null){
-					
-						for(Wagon w : not_assigned){
-							
+					//Case of that you have an attach
+					if((instantiation_array.get(i) == null)&&(i==0)&&(this.name.equals("ATTACH"))){
+						//Check if you have a towed predicate in the current state
+						ArrayList<Predicate> predicates = curr.getPredicate();
+						int j = 0;
+						boolean found = false;
+						while(j<predicates.size() && !found){
+							Predicate predicate = predicates.get(j);
+							if(predicate.getName().equals("TOWED")){
+								found = true;
+								ArrayList<Object> inputTowed = predicate.getInput();
+								Wagon wagon = (Wagon)inputTowed.get(0);
+								not_assigned.remove(wagon);
+								instantiation_array.remove(0);
+								instantiation_array.add(0,wagon);
+								
+								Operator operator = plan.get(plan.size()-1);
+								//Check if the last operator in the plan is a detach or not
+								if(operator.getName().equals("DETACH")){
+									ArrayList<Object> inputDetach = operator.getInput();
+									wagon = (Wagon)inputDetach.get(1);
+									not_assigned.remove(wagon);
+								}
+							}
+							j++;
+						}
+					//Couple case
+					}else if((instantiation_array.get(i) == null)&&(i==0)&&(this.name.equals("COUPLE"))){
+						Operator operator = plan.get(plan.size()-1);
+						//Check if the last operator in the plan is a detach or not
+						if(operator.getName().equals("DETACH")){
+							ArrayList<Object> inputDetach = operator.getInput();
+							Wagon wagon = (Wagon)inputDetach.get(1);
+							not_assigned.remove(wagon);
+							instantiation_array.remove(i);
+							instantiation_array.add(i,wagon);
+						}
+//					}else if((i==0)&&(this.name.equals("DETACH"))){
+//						//Check if you have a infront of predicate in the current state
+//						ArrayList<Predicate> predicates = curr.getPredicate();
+//						int j = 0;
+//						Wagon wagon;
+//						boolean found = false;
+//						while(j<predicates.size()-1 && !found){
+//							Predicate predicate = predicates.get(j);
+//							ArrayList<Object> inputInfrontof = predicate.getInput();	
+//							if (predicate.getName().equals("TOWED")){
+//								wagon = (Wagon)inputInfrontof.get(0);
+//								not_assigned.remove(wagon);
+//							}
+//							j++;
+//						}
+					}else if(instantiation_array.get(i) == null){
+						for(Wagon w : not_assigned){	
 							int tmp_counter = 0;
 							for(Predicate a : preconditions){
 								

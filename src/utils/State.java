@@ -28,6 +28,10 @@ public class State {
 		
 		if(p.getName().equals("USED-RAILWAYS")){
 			return true;
+			
+		}else if(p.getName().equals("N<MAX")){
+			//TODO Define the max railways
+			return used_railways<3; 
 		}
 		
 		for(Predicate pred : predicates){

@@ -18,6 +18,7 @@ public class Main {
 
 	private static final int MAX_MEMORY = 3;
 	private static int numStates = 0;
+	private static boolean DEBUG = true;
 	/**
 	 * @param args
 	 */
@@ -31,10 +32,10 @@ public class Main {
 		//Start the algorithm
 		Stack<Object> stack = new Stack<Object>();
 		State current_state = problem.getInitialState();
-		System.out.println("\n"+current_state+"\n\n");
+		//System.out.println("\n"+current_state+"\n\n");
 
 		State ef = problem.getGoalState();
-		
+		System.out.println("\n"+ef+"\n");
 		//Create the plan
 		ArrayList<Operator> plan = new ArrayList<Operator>();
 		ArrayList<Object> last_used = new ArrayList<Object>();
@@ -43,6 +44,13 @@ public class Main {
 		stack.add(ef.getPredicate());
 		
 		//Add the predicates of the final state
+		int i;
+		ArrayList<Predicate> predicates = ef.getPredicate();
+		
+//		for(i=predicates.size()-1;i>=0;i--){
+//			stack.add(predicates.get(i));
+//		}
+		
 		for (Predicate p : ef.getPredicate()) stack.add(p);
 		Object e = null;
 		
@@ -73,7 +81,7 @@ public class Main {
 			//Predicate
 			}else if(e instanceof Predicate) {
 				Predicate p = (Predicate) e;
-				//System.out.println("Unstack: " + p);
+				if(DEBUG)System.out.println("Unstack: " + p);
 				//The predicate isn't in the current_state
 				
 				if(!current_state.hasThisPredicate(p)){
@@ -81,14 +89,14 @@ public class Main {
 						p = new Predicate("USED-RAILWAYS", null, Operator.nminus1);	
 					}
 					ArrayList<Operator> op_list = operatorFinder.findOperator(p);
-					//TODO MAKE A DECISION
+					if(DEBUG)System.out.println("List:"+op_list);
 					int max_prec = 0;
 					Operator o = (Operator) op_list.get(0).clone();
 					ArrayList<Operator> sorted_list = new ArrayList<Operator>();
 					//do{
 					for(Operator o_tmp : op_list){
 						
-							int tmp = o_tmp.preconditionsAccomplished(ef);
+							int tmp = o_tmp.preconditionsAccomplished(current_state);
 							if(tmp > max_prec){
 								max_prec = tmp;
 								o = (Operator) o_tmp.clone();
@@ -97,13 +105,12 @@ public class Main {
 								sorted_list.add((Operator) o_tmp.clone());
 							}
 					}
-					//o = (Operator) (op_list.get(0 + (int)(Math.random() * (((op_list.size())-1 - 0) + 1)))).clone();
 					do{
 						o = sorted_list.remove(0);
-						o.instantiate(p.getInstances(), p.getInputNames(), stack, current_state);
-						//System.out.println("testing with: " + o);
+						o.instantiate(p.getInstances(), p.getInputNames(), stack, current_state, plan);
+						if(DEBUG)System.out.println("Select operator:"+o);
 					}while(last_used.contains(o) && sorted_list.size() > 0);
-					//System.out.println("Stack " + o);
+					if(DEBUG)System.out.println("Stack " + o);
 					stack.add(o);
 					if(last_used.size() >= MAX_MEMORY){
 						last_used.remove(0);
@@ -112,6 +119,9 @@ public class Main {
 					
 					ArrayList<Predicate> tmp = o.getArrayPrecs();
 					stack.add(tmp);
+//					for(i=tmp.size()-1;i>=0;i--){
+//						stack.add(tmp.get(i));
+//					}
 					for(Predicate prec : tmp){
 						stack.add(prec);
 					}
@@ -131,11 +141,15 @@ public class Main {
 				
 				if(!notDisponible.isEmpty()){
 					stack.add(array);
+//					for(i=notDisponible.size()-1;i>=0;i--){
+//						stack.add(notDisponible.get(i));
+//					}
 					for(Predicate p : notDisponible) stack.add(p);
 				}
 			}
 		}
 		
+		System.out.println("Finish the process!");
 		for(Operator o : plan){
 			System.out.println(o);
 		}
