@@ -16,7 +16,7 @@ public final class FileReader {
 	private static final String INITIAL_STATE = "Initial_state=";
 	private static final String GOAL_STATE = "Goal_state=";
 	
-	private static String filename = System.getProperty("user.dir")+"/problem1.txt";
+	private static String filename = System.getProperty("user.dir")+"/problem2.txt";
 	
 	public static Problem readFile(){
 		
@@ -28,7 +28,6 @@ public final class FileReader {
 		}*/
 		File file = new File(filename);
 		return parseFile(file);
-		//return null;
 		
 	}
 	
@@ -61,6 +60,7 @@ public final class FileReader {
 		}
 		
 		text = text.replace(" ", "");
+		text = text.replace("\n", "");
 		int i1 = text.indexOf(WAGONS);
 		int i2 = text.indexOf(INITIAL_STATE);
 		int i3 = text.indexOf(GOAL_STATE);

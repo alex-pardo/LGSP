@@ -137,7 +137,16 @@ public class Predicate {
 	@Override
 	public boolean equals(Object obj) {
 		Predicate p = (Predicate) obj;
-		
+		if(p.getName().equals(TYPES[this.type])){
+			if(p.getInstances() == null && input == null) return true;
+			if(p.getInstances() == null || input == null) return false;
+			for(int i = 0; i < this.input.size(); i++){
+				if(!((Wagon)input.get(i)).getName().equals(((Wagon)p.getInstances().get(i)).getName())) return false;	
+			}
+			return true;
+		}
+		return false;
+		/*
 		try {
 			if(this.getName().equals(p.getName())){
 				if(p.getInstances() == null && input == null){
@@ -178,7 +187,7 @@ public class Predicate {
 			return true;
 		} catch (NullPointerException e) {
 			return false;
-		}
+		}*/
 	}
 	
 	@Override

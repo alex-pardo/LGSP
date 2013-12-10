@@ -15,10 +15,11 @@ public class Problem {
 	public Problem(ArrayList<Wagon> wagons, State i, State g){
 		objects = wagons;
 		initial = i;
-		goal = g;
-		
+		goal = g;		
 	}
 	
+	
+
 	public State getGoalState(){
 		return goal;
 	}

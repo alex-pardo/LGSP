@@ -227,7 +227,7 @@ public class Operator {
 				}
 			}else{
 				for(Predicate p : s.getPredicate()){
-					if(prec.equalsName(p.getName())){
+					if(prec.equals(p)){
 						return_val ++;
 					} 
 
@@ -374,7 +374,7 @@ public class Operator {
 				
 				for(int i = 0; i < instantiation_array.size(); i++){
 					//Case of that you have an attach
-					if((instantiation_array.get(i) == null)&&(i==0)&&(this.name.equals("ATTACH"))){
+					/*if((instantiation_array.get(i) == null)&&(i==0)&&(this.name.equals("ATTACH"))){
 						//Check if you have a towed predicate in the current state
 						ArrayList<Predicate> predicates = curr.getPredicate();
 						int j = 0;
@@ -425,7 +425,7 @@ public class Operator {
 //							}
 //							j++;
 //						}
-					}else if(instantiation_array.get(i) == null){
+					}else */if(instantiation_array.get(i) == null){
 						for(Wagon w : not_assigned){	
 							int tmp_counter = 0;
 							for(Predicate a : preconditions){
@@ -438,18 +438,19 @@ public class Operator {
 										}
 									}
 								}
-
+								int depth = 0;
 								for(Object element : s){
-									
+									depth ++;
 									if(element instanceof Predicate){
 										Predicate tmp = (Predicate) element;
 										if(tmp == null || tmp.getInstances() == null) continue;
 										if(tmp.equalsName(a.getName())){
 											for(Object o : tmp.getInstances()){
-												if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1;
+												if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=2;
 											}
 										}
 									}
+									if(depth > 15) break;
 																		
 								}
 								
@@ -462,7 +463,7 @@ public class Operator {
 						}
 	
 						if(best == null){
-							System.out.println("RANDOM");
+							//System.out.println("RANDOM");
 							int tmp = 0 + (int)(Math.random() * (((not_assigned.size())-1 - 0) + 1));
 							instantiation_array.remove(i);
 							instantiation_array.add(i,not_assigned.get(tmp));

@@ -16,7 +16,7 @@ import utils.State;
 import utils.SystemWagons;
 public class Main {
 
-	private static final int MAX_MEMORY = 3;
+	private static final int MAX_MEMORY = 4;
 	private static int numStates = 0;
 	private static boolean DEBUG = true;
 	/**
@@ -46,7 +46,6 @@ public class Main {
 		//Add the predicates of the final state
 		int i;
 		ArrayList<Predicate> predicates = ef.getPredicate();
-		
 //		for(i=predicates.size()-1;i>=0;i--){
 //			stack.add(predicates.get(i));
 //		}
@@ -71,7 +70,7 @@ public class Main {
 				//TODO
 				current_state = o.apply(current_state);
 				//Add the operator into the plan
-				System.out.println("Applying plan: " + o);
+				System.out.println("--------Applying plan: " + o);
 				plan.add(o);
 				numStates++;
 				current_state.setName(String.valueOf(numStates));
@@ -82,6 +81,8 @@ public class Main {
 			}else if(e instanceof Predicate) {
 				Predicate p = (Predicate) e;
 				if(DEBUG)System.out.println("Unstack: " + p);
+				//if(DEBUG)System.out.println(current_state.hasThisPredicate(p));
+				//if(current_state.hasThisPredicate(p)) System.out.println(current_state);
 				//The predicate isn't in the current_state
 				
 				if(!current_state.hasThisPredicate(p)){
@@ -95,7 +96,7 @@ public class Main {
 					ArrayList<Operator> sorted_list = new ArrayList<Operator>();
 					//do{
 					for(Operator o_tmp : op_list){
-						
+						 	o_tmp.instantiate(p.getInstances(), p.getInputNames(), stack, current_state, plan);
 							int tmp = o_tmp.preconditionsAccomplished(current_state);
 							if(tmp > max_prec){
 								max_prec = tmp;
@@ -153,5 +154,6 @@ public class Main {
 		for(Operator o : plan){
 			System.out.println(o);
 		}
+		System.out.println(current_state);
 	}
 }
