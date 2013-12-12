@@ -123,11 +123,115 @@ public class Predicate {
 		return input;
 	}
 
+	public int hasInstances(ArrayList<Object> instances, Object o){
+		int result = 0;
+		int null_pos = -1;
+		for(int i = 0; i < instances.size(); i++){
+			if(instances.get(i) == null) null_pos = i;
+			if(instances.get(i) != null && input.contains(instances.get(i))) result ++;
+		}
+		if(null_pos >= 0){
+			if(input.contains(o)){
+				result++;
+			}
+		}
+		//if(result <= 1) return 0;
+		return result;
+	}
 	
 	public List<String> getInputNames() {
 		return inputNames;
 	}
 
+	public List<String> getInputNames(Operator o) {
+		ArrayList<String> tmp = new ArrayList<String>();
+		switch(o.getOp_type()){
+		case 0: 
+			//COUPLE 
+			//Preconditions: USED-RAILWAYS(n), ON-STATION(x), FREE-LOCOMOTIVE, FREE(x)
+			//Eliminate: ON-STATION(x), FREE-LOCOMOTIVE, USED-RAILWAYS(n)
+			//Add: TOWED(x), USED-RAILWAYS(n-1)
+			if(type == 5){
+				tmp.add("x");
+				return tmp;
+			} 
+			
+			
+			break;
+		
+		case 1:
+			//PARK
+			// Preconditions: TOWED(x), USED-RAILWAYS(n), n<max-railways
+			// Eliminate: TOWED(x), USED-RAILWAYS(n)
+			// Add: ON-STATION(x), USED-RAILWAYS(n+1), FREE-LOCOMOTIVE
+			
+			if(type == 0){
+				tmp.add("x");
+				return tmp;
+			}
+			break;
+			
+		case 2:
+			// DETACH
+			// Preconditions: IN-FRONT-OF(x,y), FREE(x), FREE-LOCOMOTIVE
+			// Eliminate: IN-FRONT-OF(x,y), FREE-LOCOMOTIVE
+			// Add: TOWED(x), FREE(y)
+			if(type == 5){
+				tmp.add("x");
+				return tmp;
+			}
+			if(type == 4){
+				tmp.add("y");
+				return tmp;
+			}
+			break;
+			
+		case 3:
+			// ATTACH
+			// Preconditions: TOWED(x), FREE(y)
+			// Eliminate: TOWED(x), FREE(y)
+			// Add: IN-FRONT-OF(x,y), FREE-LOCOMOTIVE
+			
+			if(type == 1){
+				tmp.add("x");
+				tmp.add("y");
+				return tmp;
+			}
+			
+			break;
+			
+		case 4:
+			// LOAD
+			// Preconditions: ON-STATION(x), EMPTY(x)
+			// Eliminate: EMPTY(x)
+			// Add: LOADED(x)
+			
+			if(type == 6){
+				tmp.add("x");
+				return tmp;
+			}
+			
+			break;
+			
+		case 5:
+			// UNLOAD
+			// Preconditions: ON-STATION(x), LOADED(x)
+			// Eliminate: LOADED(x)
+			// Add: EMPTY(x)
+			
+			if(type == 7){
+				tmp.add("x");
+				return tmp;
+			}
+			
+			break;
+		
+		default:
+			break;
+	}
+		return null;
+	}
+	
 
 	public void setInputNames(List<String> inputNames) {
 		this.inputNames = inputNames;
@@ -137,7 +241,7 @@ public class Predicate {
 	@Override
 	public boolean equals(Object obj) {
 		Predicate p = (Predicate) obj;
-		if(p.getName().equals(TYPES[this.type])){
+		if(p.getName().equals(TYPES[this.type])){ //check free locomotive and used_rails
 			if(p.getInstances() == null && input == null) return true;
 			if(p.getInstances() == null || input == null) return false;
 			for(int i = 0; i < this.input.size(); i++){
@@ -146,53 +250,14 @@ public class Predicate {
 			return true;
 		}
 		return false;
-		/*
-		try {
-			if(this.getName().equals(p.getName())){
-				if(p.getInstances() == null && input == null){
-					return true;
-				}
-				for(Object o1 : p.getInstances()){
-					boolean trobat = false;			
-					for(Object o2 : input){
-						if(o1 instanceof Wagon && o2 instanceof Wagon){
-							if(((Wagon) o1).nameEquals(((Wagon) o2).getName())){ trobat = true;break;}
-						} else if(o1 instanceof Integer && o2 instanceof Integer){
-							if((Integer) o1 == (Integer) o2){ trobat = true; break;} 
-						}else{
-							return false;
-						}
-					}
-					if(!trobat) return false;
-				}
-				
-				for(Object o1 : input){
-					boolean trobat = false;			
-					for(Object o2 : p.getInstances()){
-						if(o1 instanceof Wagon && o2 instanceof Wagon){
-							if(((Wagon) o1).nameEquals(((Wagon) o2).getName())){ trobat = true;break;}
-						} else if(o1 instanceof Integer && o2 instanceof Integer){
-							if((Integer) o1 == (Integer) o2){ trobat = true; break;} 
-						}else{
-							return false;
-						}
-					}
-					if(!trobat) return false;
-				}
-				
-				
-			}else{
-				return false;
-			}
-			return true;
-		} catch (NullPointerException e) {
-			return false;
-		}*/
+		
 	}
 	
 	@Override
 	public Object clone(){
 		return new Predicate(this.getName(), this.input, this.inputNames);
 	}
+
+	
 	
 }

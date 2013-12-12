@@ -189,8 +189,14 @@ public class Operator {
 	}
 
 	public boolean hasAdd(Predicate p){
+		boolean value = false;
 		for(Predicate a : add){
-			if(a.equalsName(p.getName())) return true;
+			if(p.getName().equals("USED-RAILWAYS")){
+				if(a.getInputNames() != null && a.equalsName(p.getName()) && a.getInputNames().get(0).equals(p.getInputNames().get(0))) return true;
+			} else{
+				if(a.equalsName(p.getName())) return true;
+			}
+			
 		}
 		return false;
 	}
@@ -218,23 +224,25 @@ public class Operator {
 		return current_state;
 	}
 	
-	public int preconditionsAccomplished(State s){
-		int return_val = 0;
+	public double preconditionsAccomplished(State s){
+		double return_val = 0;
+		double total_precs = preconditions.size();
 		for(Predicate prec : preconditions){
 			if(prec.equalsName("N<MAX")){
+				System.out.println(s.railwaysLower(Predicate.MAX_RAILWAYS));
 				if(s.railwaysLower(Predicate.MAX_RAILWAYS)){
 					return_val ++;
 				}
 			}else{
 				for(Predicate p : s.getPredicate()){
-					if(prec.equals(p)){
+					if(prec.equalsName(p)){
 						return_val ++;
 					} 
 
 				}
 			}
 		}
-		return return_val;
+		return return_val/total_precs;
 	}
 
 	
@@ -429,12 +437,19 @@ public class Operator {
 						for(Wagon w : not_assigned){	
 							int tmp_counter = 0;
 							for(Predicate a : preconditions){
-								
 								for(Predicate tmp : curr.getPredicate()){
+									int weight = 1;
 									if(tmp == null || tmp.getInstances() == null) continue;
 									if(tmp.equalsName(a.getName())){
+										if(tmp.hasInstances(instantiation_array, w) > 1) weight += 1;
 										for(Object o : tmp.getInstances()){
-											if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1;
+											if(tmp.getName().equals("ON-STATION") && name.equals("COUPLE")) weight += 1;
+											if(tmp.getName().equals("IN-FRONT-OF") && name.equals("DETACH")) weight += 1;
+											if(tmp.getName().equals("FREE") && name.equals("DETACH")) weight += 1;
+											if(tmp.getName().equals("TOWED") && name.equals("PARK")) weight += 1;
+											if(tmp.getName().equals("ON-STATION") && name.equals("LOAD")) weight += 1;
+											if(tmp.getName().equals("ON-STATION") && name.equals("UNLOAD")) weight += 1;
+											if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1*weight;
 										}
 									}
 								}
@@ -446,11 +461,11 @@ public class Operator {
 										if(tmp == null || tmp.getInstances() == null) continue;
 										if(tmp.equalsName(a.getName())){
 											for(Object o : tmp.getInstances()){
-												if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=2;
+												if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1;
 											}
 										}
 									}
-									if(depth > 15) break;
+									if(depth > 5) break;
 																		
 								}
 								

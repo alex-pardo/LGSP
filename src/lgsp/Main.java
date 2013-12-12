@@ -16,7 +16,7 @@ import utils.State;
 import utils.SystemWagons;
 public class Main {
 
-	private static final int MAX_MEMORY = 4;
+	private static final int MAX_MEMORY = 2;
 	private static int numStates = 0;
 	private static boolean DEBUG = true;
 	/**
@@ -60,6 +60,7 @@ public class Main {
 		
 		//While the stack isn't empty
 		while(!stack.isEmpty()){
+			System.out.println("-------");
 			e = stack.pop();//Get the top element
 			
 			//Operator
@@ -90,14 +91,15 @@ public class Main {
 						p = new Predicate("USED-RAILWAYS", null, Operator.nminus1);	
 					}
 					ArrayList<Operator> op_list = operatorFinder.findOperator(p);
-					if(DEBUG)System.out.println("List:"+op_list);
-					int max_prec = 0;
+					
+					double max_prec = 0;
 					Operator o = (Operator) op_list.get(0).clone();
 					ArrayList<Operator> sorted_list = new ArrayList<Operator>();
 					//do{
 					for(Operator o_tmp : op_list){
-						 	o_tmp.instantiate(p.getInstances(), p.getInputNames(), stack, current_state, plan);
-							int tmp = o_tmp.preconditionsAccomplished(current_state);
+						 	o_tmp.instantiate(p.getInstances(), p.getInputNames(o_tmp), stack, current_state, plan);
+							double tmp = o_tmp.preconditionsAccomplished(current_state);
+							System.out.println(o_tmp + ": "+ tmp);
 							if(tmp > max_prec){
 								max_prec = tmp;
 								o = (Operator) o_tmp.clone();
@@ -106,9 +108,10 @@ public class Main {
 								sorted_list.add((Operator) o_tmp.clone());
 							}
 					}
+					if(DEBUG)System.out.println("List:"+sorted_list);
 					do{
 						o = sorted_list.remove(0);
-						o.instantiate(p.getInstances(), p.getInputNames(), stack, current_state, plan);
+						o.instantiate(p.getInstances(), p.getInputNames(o), stack, current_state, plan);
 						if(DEBUG)System.out.println("Select operator:"+o);
 					}while(last_used.contains(o) && sorted_list.size() > 0);
 					if(DEBUG)System.out.println("Stack " + o);

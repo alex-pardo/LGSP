@@ -12,6 +12,7 @@ public class Problem {
 	private State goal;
 	private ArrayList<Wagon> objects;
 	
+	
 	public Problem(ArrayList<Wagon> wagons, State i, State g){
 		objects = wagons;
 		initial = i;
@@ -47,6 +48,9 @@ public class Problem {
 		return output;
 		
 	}
+
+
+
 	
 	
 	

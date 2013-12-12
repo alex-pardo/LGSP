@@ -7,11 +7,13 @@ public class State {
 	private ArrayList<Predicate> predicates;
 	private String name;
 	private int used_railways; 
+	private int max_railways;
 	
-	public State(String name, int used_railways){
+	public State(String name, int used_railways, int max_railways){
 		this.name = name;
 		this.used_railways = used_railways;
 		predicates = new ArrayList<Predicate>();
+		this.max_railways = max_railways;
 	}
 	public State(ArrayList<Predicate> p) {
 		predicates = p;
@@ -31,7 +33,7 @@ public class State {
 			
 		}else if(p.getName().equals("N<MAX")){
 			//TODO Define the max railways
-			return used_railways<3; 
+			return used_railways<max_railways; 
 		}
 		
 		for(Predicate pred : predicates){
