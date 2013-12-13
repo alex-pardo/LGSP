@@ -235,7 +235,7 @@ public class Operator {
 				}
 			}else{
 				for(Predicate p : s.getPredicate()){
-					if(prec.equalsName(p)){
+					if(prec.equals(p)){
 						return_val ++;
 					} 
 
@@ -341,6 +341,9 @@ public class Operator {
 		return new Operator(this.name);
 	}
 	
+
+	
+	
 	public void instantiate(ArrayList<Object> instances, List<String> names, Stack<Object> s, State curr, ArrayList<Operator> plan){
 		if(input == null){
 			
@@ -379,120 +382,102 @@ public class Operator {
 				
 				int max_wagon = 0;
 				Wagon best = null;
-				
-				for(int i = 0; i < instantiation_array.size(); i++){
-					//Case of that you have an attach
-					/*if((instantiation_array.get(i) == null)&&(i==0)&&(this.name.equals("ATTACH"))){
-						//Check if you have a towed predicate in the current state
-						ArrayList<Predicate> predicates = curr.getPredicate();
-						int j = 0;
-						boolean found = false;
-						while(j<predicates.size() && !found){
-							Predicate predicate = predicates.get(j);
-							if(predicate.getName().equals("TOWED")){
-								found = true;
-								ArrayList<Object> inputTowed = predicate.getInput();
-								Wagon wagon = (Wagon)inputTowed.get(0);
-								not_assigned.remove(wagon);
-								instantiation_array.remove(0);
-								instantiation_array.add(0,wagon);
-								
-								Operator operator = plan.get(plan.size()-1);
-								//Check if the last operator in the plan is a detach or not
-								if(operator.getName().equals("DETACH")){
-									ArrayList<Object> inputDetach = operator.getInput();
-									wagon = (Wagon)inputDetach.get(1);
-									not_assigned.remove(wagon);
-								}
-							}
-							j++;
-						}
-					//Couple case
-					}else if((instantiation_array.get(i) == null)&&(i==0)&&(this.name.equals("COUPLE"))){
-						Operator operator = plan.get(plan.size()-1);
-						//Check if the last operator in the plan is a detach or not
-						if(operator.getName().equals("DETACH")){
-							ArrayList<Object> inputDetach = operator.getInput();
-							Wagon wagon = (Wagon)inputDetach.get(1);
-							not_assigned.remove(wagon);
-							instantiation_array.remove(i);
-							instantiation_array.add(i,wagon);
-						}
-//					}else if((i==0)&&(this.name.equals("DETACH"))){
-//						//Check if you have a infront of predicate in the current state
-//						ArrayList<Predicate> predicates = curr.getPredicate();
-//						int j = 0;
-//						Wagon wagon;
-//						boolean found = false;
-//						while(j<predicates.size()-1 && !found){
-//							Predicate predicate = predicates.get(j);
-//							ArrayList<Object> inputInfrontof = predicate.getInput();	
-//							if (predicate.getName().equals("TOWED")){
-//								wagon = (Wagon)inputInfrontof.get(0);
-//								not_assigned.remove(wagon);
-//							}
-//							j++;
-//						}
-					}else */if(instantiation_array.get(i) == null){
-						for(Wagon w : not_assigned){	
-							int tmp_counter = 0;
-							for(Predicate a : preconditions){
-								for(Predicate tmp : curr.getPredicate()){
-									int weight = 1;
-									if(tmp == null || tmp.getInstances() == null) continue;
-									if(tmp.equalsName(a.getName())){
-										if(tmp.hasInstances(instantiation_array, w) > 1) weight += 1;
-										for(Object o : tmp.getInstances()){
-											if(tmp.getName().equals("ON-STATION") && name.equals("COUPLE")) weight += 1;
-											if(tmp.getName().equals("IN-FRONT-OF") && name.equals("DETACH")) weight += 1;
-											if(tmp.getName().equals("FREE") && name.equals("DETACH")) weight += 1;
-											if(tmp.getName().equals("TOWED") && name.equals("PARK")) weight += 1;
-											if(tmp.getName().equals("ON-STATION") && name.equals("LOAD")) weight += 1;
-											if(tmp.getName().equals("ON-STATION") && name.equals("UNLOAD")) weight += 1;
-											if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1*weight;
-										}
-									}
-								}
-								int depth = 0;
-								for(Object element : s){
-									depth ++;
-									if(element instanceof Predicate){
-										Predicate tmp = (Predicate) element;
+				while(instantiation_array.contains(null)){
+					for(int i = 0; i < instantiation_array.size(); i++){
+						if(instantiation_array.get(i) == null){
+							for(Wagon w : not_assigned){	
+								int tmp_counter = 0;
+								for(Predicate a : preconditions){
+									for(Predicate tmp : curr.getPredicate()){
+										int weight = 1;
 										if(tmp == null || tmp.getInstances() == null) continue;
 										if(tmp.equalsName(a.getName())){
+											if(tmp.hasInstances(instantiation_array, w) > 1) weight += 1;
 											for(Object o : tmp.getInstances()){
-												if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1;
+												if(tmp.getName().equals("ON-STATION") && name.equals("COUPLE")) weight += 1;
+												if(tmp.getName().equals("IN-FRONT-OF") && name.equals("DETACH")) weight += 1;
+												if(tmp.getName().equals("FREE") && name.equals("DETACH")) weight += 1;
+												if(tmp.getName().equals("TOWED") && name.equals("PARK")) weight += 1;
+												if(tmp.getName().equals("ON-STATION") && name.equals("LOAD")) weight += 1;
+												if(tmp.getName().equals("ON-STATION") && name.equals("UNLOAD")) weight += 1;
+												if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1*weight;
 											}
 										}
 									}
-									if(depth > 5) break;
-																		
+									int depth = 0;
+									for(Object element : s){
+										depth ++;
+										if(element instanceof Predicate){
+											Predicate tmp = (Predicate) element;
+											if(tmp == null || tmp.getInstances() == null) continue;
+											if(tmp.equalsName(a.getName())){
+												for(Object o : tmp.getInstances()){
+													if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1;
+												}
+											}
+										}
+										if(depth > 5) break;
+																			
+									}
+									
+								}
+								if(tmp_counter > max_wagon){
+									max_wagon = tmp_counter;
+									best = (Wagon) w.clone();
 								}
 								
 							}
-							if(tmp_counter > max_wagon){
-								max_wagon = tmp_counter;
-								best = (Wagon) w.clone();
+		
+							if(best == null){
+								//System.out.println("RANDOM");
+								int tmp = 0 + (int)(Math.random() * (((not_assigned.size())-1 - 0) + 1));
+								instantiation_array.remove(i);
+								instantiation_array.add(i,not_assigned.get(tmp));
+								not_assigned.remove(tmp);
+							} else{
+								instantiation_array.remove(i);
+								instantiation_array.add(i,best);
+								not_assigned.remove(best);
 							}
+							max_wagon = 0;
+							best = null;
+						}
+					}
+					
+					
+						
+					if(plan.size() > 0){
+						
+						if(name.equals(plan.get(plan.size()-1).getName()) && !instantiation_array.contains(null)){
+							Operator tmp = plan.get(plan.size()-1);
+							if(tmp.getName().equals("DETACH")){
+								ArrayList<Object> wagons = tmp.getInput();
+								if(((Wagon)wagons.get(0)).getName().equals(((Wagon)instantiation_array.get(1)).getName()) &&
+										((Wagon)wagons.get(1)).getName().equals(((Wagon)instantiation_array.get(0)).getName())){
+									instantiation_array.remove(0);
+									instantiation_array.add(0,null);
+								}
+							}
+						}
+						
+						
+						if(name.equals("ATTACH") && !instantiation_array.contains(null)){
 							
+							Operator tmp = plan.get(plan.size()-1);
+							if(tmp.getName().equals("DETACH")){
+								ArrayList<Object> wagons = tmp.getInput();
+								if(((Wagon)wagons.get(0)).getName().equals(((Wagon)instantiation_array.get(0)).getName()) &&
+										((Wagon)wagons.get(1)).getName().equals(((Wagon)instantiation_array.get(1)).getName())){
+									System.out.println("IN");
+									instantiation_array.remove(1);
+									instantiation_array.add(null);
+								}
+							}
 						}
-	
-						if(best == null){
-							//System.out.println("RANDOM");
-							int tmp = 0 + (int)(Math.random() * (((not_assigned.size())-1 - 0) + 1));
-							instantiation_array.remove(i);
-							instantiation_array.add(i,not_assigned.get(tmp));
-							not_assigned.remove(tmp);
-						} else{
-							instantiation_array.remove(i);
-							instantiation_array.add(i,best);
-							not_assigned.remove(best);
-						}
-						max_wagon = 0;
-						best = null;
 					}
 				}
 			}
+			
 			input = instantiation_array;
 			
 			
@@ -650,7 +635,9 @@ public class Operator {
 		    this.x = x; 
 		    this.y = y; 
 		  } 
-		} 
+		}
+
+
 	
 	
 }
