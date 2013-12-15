@@ -74,6 +74,7 @@ public class Main {
 				System.out.println("--------Applying plan: " + o);
 				plan.add(o);
 				numStates++;
+				if(DEBUG)System.out.println("State:"+numStates);
 				current_state.setName(String.valueOf(numStates));
 				//System.out.println(current_state+"\n\n");
 				//System.out.println("Stack: \n"+ stack);

@@ -229,7 +229,6 @@ public class Operator {
 		double total_precs = preconditions.size();
 		for(Predicate prec : preconditions){
 			if(prec.equalsName("N<MAX")){
-				System.out.println(s.railwaysLower(Predicate.MAX_RAILWAYS));
 				if(s.railwaysLower(Predicate.MAX_RAILWAYS)){
 					return_val ++;
 				}
@@ -385,6 +384,7 @@ public class Operator {
 				while(instantiation_array.contains(null)){
 					for(int i = 0; i < instantiation_array.size(); i++){
 						if(instantiation_array.get(i) == null){
+							ArrayList<Tuple<Integer,Wagon>> bestList = new ArrayList<Tuple<Integer,Wagon>> ();
 							for(Wagon w : not_assigned){	
 								int tmp_counter = 0;
 								for(Predicate a : preconditions){
@@ -394,50 +394,69 @@ public class Operator {
 										if(tmp.equalsName(a.getName())){
 											if(tmp.hasInstances(instantiation_array, w) > 1) weight += 1;
 											for(Object o : tmp.getInstances()){
-												if(tmp.getName().equals("ON-STATION") && name.equals("COUPLE")) weight += 1;
-												if(tmp.getName().equals("IN-FRONT-OF") && name.equals("DETACH")) weight += 1;
-												if(tmp.getName().equals("FREE") && name.equals("DETACH")) weight += 1;
-												if(tmp.getName().equals("TOWED") && name.equals("PARK")) weight += 1;
-												if(tmp.getName().equals("ON-STATION") && name.equals("LOAD")) weight += 1;
-												if(tmp.getName().equals("ON-STATION") && name.equals("UNLOAD")) weight += 1;
+												if(tmp.getName().equals("ON-STATION") && name.equals("COUPLE") && tmp.getInput().get(i).equals(o)) weight += 1;
+												if(tmp.getName().equals("IN-FRONT-OF") && name.equals("DETACH") && tmp.getInput().get(i).equals(o)) weight += 1;
+												if(tmp.getName().equals("FREE") && name.equals("DETACH")&& tmp.getInput().get(0).equals(o)) weight += 1;
+												if(tmp.getName().equals("TOWED") && name.equals("PARK")&& tmp.getInput().get(0).equals(o)) weight += 1;
+												if(tmp.getName().equals("ON-STATION") && name.equals("LOAD")&& tmp.getInput().get(i).equals(o)) weight += 1;
+												if(tmp.getName().equals("ON-STATION") && name.equals("UNLOAD")&& tmp.getInput().get(i).equals(o)) weight += 1;
 												if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1*weight;
 											}
 										}
 									}
-									int depth = 0;
-									for(Object element : s){
-										depth ++;
-										if(element instanceof Predicate){
-											Predicate tmp = (Predicate) element;
-											if(tmp == null || tmp.getInstances() == null) continue;
-											if(tmp.equalsName(a.getName())){
-												for(Object o : tmp.getInstances()){
-													if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1;
-												}
-											}
-										}
-										if(depth > 5) break;
-																			
-									}
+									
+									//System.out.println("Wagon:"+w.getName() + " counter:"+tmp_counter+" a:"+a.getName());
+									//int depth = 0;
+//									for(Object element : s){
+//										depth ++;
+//										if(element instanceof Predicate){
+//											Predicate tmp = (Predicate) element;
+//											if(tmp == null || tmp.getInstances() == null) continue;
+//											if(tmp.equalsName(a.getName())){
+//												for(Object o : tmp.getInstances()){
+//													if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1;
+//												}
+//											}
+//										}
+//										if(depth > 5) break;
+//																			
+//									}
 									
 								}
+								
+								Tuple<Integer, Wagon> tuple;
+								
 								if(tmp_counter > max_wagon){
 									max_wagon = tmp_counter;
 									best = (Wagon) w.clone();
+									//Delete all the elements of the list
+									bestList = new ArrayList<Tuple<Integer,Wagon>> ();
+									tuple = new Tuple<Integer, Wagon>(tmp_counter,best);
+									bestList.add(tuple);
+								}else if (tmp_counter == max_wagon){
+									best = (Wagon) w.clone();
+									tuple = new Tuple<Integer, Wagon>(tmp_counter,best);
+									bestList.add(tuple);
 								}
-								
 							}
 		
 							if(best == null){
-								//System.out.println("RANDOM");
-								int tmp = 0 + (int)(Math.random() * (((not_assigned.size())-1 - 0) + 1));
+								System.out.println("RANDOM");
+								int tmp = 0 + (int)(Math.random() * (((bestList.size())-1 - 0) + 1));
 								instantiation_array.remove(i);
-								instantiation_array.add(i,not_assigned.get(tmp));
+								instantiation_array.add(i,bestList.get(tmp).y);
 								not_assigned.remove(tmp);
 							} else{
-								instantiation_array.remove(i);
-								instantiation_array.add(i,best);
-								not_assigned.remove(best);
+								if(bestList.size()==1){
+									instantiation_array.remove(i);
+									instantiation_array.add(i,best);
+									not_assigned.remove(best);
+								}else{
+									int tmp = 0 + (int)(Math.random() * (((bestList.size())-1 - 0) + 1));
+									instantiation_array.remove(i);
+									instantiation_array.add(i,bestList.get(tmp).y);
+									not_assigned.remove(tmp);
+								}
 							}
 							max_wagon = 0;
 							best = null;
@@ -468,7 +487,6 @@ public class Operator {
 								ArrayList<Object> wagons = tmp.getInput();
 								if(((Wagon)wagons.get(0)).getName().equals(((Wagon)instantiation_array.get(0)).getName()) &&
 										((Wagon)wagons.get(1)).getName().equals(((Wagon)instantiation_array.get(1)).getName())){
-									System.out.println("IN");
 									instantiation_array.remove(1);
 									instantiation_array.add(null);
 								}
