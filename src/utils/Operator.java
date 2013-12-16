@@ -343,7 +343,7 @@ public class Operator {
 
 	
 	
-	public void instantiate(ArrayList<Object> instances, List<String> names, Stack<Object> s, State curr, ArrayList<Operator> plan, Predicate curr_p){
+	public void instantiate(ArrayList<Object> instances, List<String> names, Stack<Object> s, State curr, ArrayList<Operator> plan, State fs){
 		if(input == null){
 			
 			ArrayList<Object> instantiation_array =  new ArrayList<Object>();
@@ -381,25 +381,38 @@ public class Operator {
 				
 				int max_wagon = 0;
 				Wagon best = null;
+				boolean first_null = false;
+				Object first_wagon = null;
+				if(instantiation_array.get(0) == null){
+					first_null = true;
+				} else{
+					first_wagon = instantiation_array.get(0);
+				}
 				while(instantiation_array.contains(null)){
 					for(int i = 0; i < instantiation_array.size(); i++){
 						if(instantiation_array.get(i) == null){
 							ArrayList<Tuple<Integer,Wagon>> bestList = new ArrayList<Tuple<Integer,Wagon>> ();
-							for(Wagon w : not_assigned){	
+							for(Wagon w : not_assigned){
+								
 								int tmp_counter = 0;
 								for(Predicate a : preconditions){
 									for(Predicate tmp : curr.getPredicate()){
-										int weight = 1;
+										double weight = 1;
 										if(tmp == null || tmp.getInstances() == null) continue;
 										if(tmp.equalsName(a.getName())){
-											if(tmp.hasInstances(instantiation_array, w) > 1) weight += 1;
+											if(tmp.hasInstances(instantiation_array, w) > 1) weight += 1.5;
+																					
+											
 											for(Object o : tmp.getInstances()){
-												if(tmp.getName().equals("ON-STATION") && name.equals("COUPLE") && tmp.getInput().get(i).equals(o)) weight += 1;
-												if(tmp.getName().equals("IN-FRONT-OF") && name.equals("DETACH") && tmp.getInput().get(i).equals(o)) weight += 1;
-												if(tmp.getName().equals("FREE") && name.equals("DETACH")&& tmp.getInput().get(0).equals(o)) weight += 1;
-												if(tmp.getName().equals("TOWED") && name.equals("PARK")&& tmp.getInput().get(0).equals(o)) weight += 1;
-												if(tmp.getName().equals("ON-STATION") && name.equals("LOAD")&& tmp.getInput().get(i).equals(o)) weight += 1;
-												if(tmp.getName().equals("ON-STATION") && name.equals("UNLOAD")&& tmp.getInput().get(i).equals(o)) weight += 1;
+												if(tmp.getName().equals("ON-STATION") && name.equals("COUPLE") && tmp.getInput().get(0).equals(w)) weight += 3;
+												if(!first_null && tmp.getName().equals("IN-FRONT-OF") && name.equals("DETACH") && tmp.getInput().get(0).equals(first_wagon) && tmp.getInput().get(1).equals(w)) weight += 5;
+												if(!first_null && tmp.getName().equals("IN-FRONT-OF") && name.equals("DETACH") && (tmp.getInput().get(0).equals(w) || tmp.getInput().get(1).equals(w))) weight += 3;
+												//if(tmp.getName().equals("FREE") && name.equals("DETACH")&& tmp.getInput().get(0).equals(w)) weight += 2;
+												if(tmp.getName().equals("TOWED") && name.equals("PARK")&& tmp.getInput().get(0).equals(w)) weight += 1;
+												if(tmp.getName().equals("ON-STATION") && name.equals("LOAD")&& tmp.getInput().get(0).equals(w)) weight += 3;
+												if(tmp.getName().equals("ON-STATION") && name.equals("UNLOAD")&& tmp.getInput().get(0).equals(w)) weight += 3;
+												// check if we are deleting a predicate on the final state by selecting this Wagon
+																							
 												if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1*weight;
 											}
 										}
@@ -447,6 +460,7 @@ public class Operator {
 								
 								
 								Tuple<Integer, Wagon> tuple;
+								//System.out.println(w + ": " + tmp_counter);
 								
 								if(tmp_counter > max_wagon){
 									max_wagon = tmp_counter;
@@ -477,7 +491,7 @@ public class Operator {
 									int tmp = 0 + (int)(Math.random() * (((bestList.size())-1 - 0) + 1));
 									instantiation_array.remove(i);
 									instantiation_array.add(i,bestList.get(tmp).y);
-									not_assigned.remove(tmp);
+									not_assigned.remove(not_assigned.indexOf(bestList.get(tmp).y));
 								}
 							}
 							max_wagon = 0;

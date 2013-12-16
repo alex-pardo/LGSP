@@ -19,7 +19,7 @@ public class Main {
 	private static final int MAX_MEMORY = 5;
 	private static int numStates = 0;
 	private static boolean DEBUG = false;
-	private static final int MAX_ITER = 500;
+	private static final int MAX_ITER = 7000;
 	/**
 	 * @param args
 	 */
@@ -74,7 +74,7 @@ public class Main {
 				//TODO
 				current_state = o.apply(current_state);
 				//Add the operator into the plan
-				System.out.println("--------------------------------Applying plan: " + o);
+				if(DEBUG)System.out.println("--------------------------------Applying plan: " + o);
 				plan.add(o);
 				numStates++;
 				if(DEBUG)System.out.println("State:"+numStates);
@@ -86,6 +86,7 @@ public class Main {
 			}else if(e instanceof Predicate) {
 				Predicate p = (Predicate) e;
 				if(DEBUG)System.out.println("Unstack: " + p);
+				
 				//if(DEBUG)System.out.println(current_state.hasThisPredicate(p));
 				//if(current_state.hasThisPredicate(p)) System.out.println(current_state);
 				//The predicate isn't in the current_state
@@ -103,7 +104,7 @@ public class Main {
 					for(Operator op : op_list){
 						Operator o_tmp = (Operator) op.clone();
 						if(DEBUG)System.out.println(o_tmp);
-					 	o_tmp.instantiate(p.getInstances(), p.getInputNames(o_tmp), stack, current_state, plan, p);
+					 	o_tmp.instantiate(p.getInstances(), p.getInputNames(o_tmp), stack, current_state, plan, ef);
 						double tmp = o_tmp.preconditionsAccomplished(current_state);
 						if(DEBUG)System.out.println(o_tmp + ": "+ tmp);
 						if(tmp > max_prec){
@@ -117,7 +118,7 @@ public class Main {
 					if(DEBUG)System.out.println("List:"+sorted_list);
 					do{
 						o = sorted_list.remove(0);
-						o.instantiate(p.getInstances(), p.getInputNames(o), stack, current_state, plan, p);
+						o.instantiate(p.getInstances(), p.getInputNames(o), stack, current_state, plan, ef);
 						if(DEBUG)System.out.println("Select operator:"+o);
 					}while(last_used.contains(o) && sorted_list.size() > 0);
 					
