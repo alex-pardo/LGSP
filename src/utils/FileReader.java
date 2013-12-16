@@ -16,7 +16,7 @@ public final class FileReader {
 	private static final String INITIAL_STATE = "Initial_state=";
 	private static final String GOAL_STATE = "Goal_state=";
 	
-	private static String filename = System.getProperty("user.dir")+"/problem2.txt";
+	private static String filename = System.getProperty("user.dir")+"/problem5.txt";
 	
 	public static Problem readFile(){
 		

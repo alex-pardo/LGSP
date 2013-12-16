@@ -343,7 +343,7 @@ public class Operator {
 
 	
 	
-	public void instantiate(ArrayList<Object> instances, List<String> names, Stack<Object> s, State curr, ArrayList<Operator> plan){
+	public void instantiate(ArrayList<Object> instances, List<String> names, Stack<Object> s, State curr, ArrayList<Operator> plan, Predicate curr_p){
 		if(input == null){
 			
 			ArrayList<Object> instantiation_array =  new ArrayList<Object>();
@@ -422,7 +422,29 @@ public class Operator {
 //																			
 //									}
 									
+//									if( curr_p.equalsName("USED_RAILWAYS") && curr_p.getInputNames().equals(Operator.nminus1)){
+//										int depth = 0;
+//										Object element;
+//										for(int pos = s.size()-1; pos >= 0; pos--){
+//										//for(Object element : s){
+//											element = s.get(pos);
+//											depth ++;
+//											if(element instanceof Predicate){
+//												Predicate tmp = (Predicate) element;
+//												if(tmp == null || tmp.getInstances() == null) continue;
+//												if(tmp.equalsName(a.getName())){
+//													for(Object o : tmp.getInstances()){
+//														if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1;
+//													}
+//												}
+//											}
+//											if(depth > 5) break;
+//																				
+//										}
+//									}
 								}
+								
+								
 								
 								Tuple<Integer, Wagon> tuple;
 								

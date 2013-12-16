@@ -18,7 +18,8 @@ public class Main {
 
 	private static final int MAX_MEMORY = 5;
 	private static int numStates = 0;
-	private static boolean DEBUG = true;
+	private static boolean DEBUG = false;
+	private static final int MAX_ITER = 500;
 	/**
 	 * @param args
 	 */
@@ -32,8 +33,8 @@ public class Main {
 		//Start the algorithm
 		Stack<Object> stack = new Stack<Object>();
 		State current_state = problem.getInitialState();
-		//System.out.println("\n"+current_state+"\n\n");
-
+		System.out.println("\n"+current_state+"\n\n");
+		
 		State ef = problem.getGoalState();
 		System.out.println("\n"+ef+"\n");
 		//Create the plan
@@ -59,7 +60,9 @@ public class Main {
 		//System.out.println(current_state);
 		
 		//While the stack isn't empty
-		while(!stack.isEmpty()){
+		int counter = 0;
+		while(!stack.isEmpty()){// && counter < MAX_ITER){
+			counter ++;
 			if(DEBUG)System.out.println("-------");
 			e = stack.pop();//Get the top element
 			
@@ -71,7 +74,7 @@ public class Main {
 				//TODO
 				current_state = o.apply(current_state);
 				//Add the operator into the plan
-				System.out.println("--------Applying plan: " + o);
+				System.out.println("--------------------------------Applying plan: " + o);
 				plan.add(o);
 				numStates++;
 				if(DEBUG)System.out.println("State:"+numStates);
@@ -100,7 +103,7 @@ public class Main {
 					for(Operator op : op_list){
 						Operator o_tmp = (Operator) op.clone();
 						if(DEBUG)System.out.println(o_tmp);
-					 	o_tmp.instantiate(p.getInstances(), p.getInputNames(o_tmp), stack, current_state, plan);
+					 	o_tmp.instantiate(p.getInstances(), p.getInputNames(o_tmp), stack, current_state, plan, p);
 						double tmp = o_tmp.preconditionsAccomplished(current_state);
 						if(DEBUG)System.out.println(o_tmp + ": "+ tmp);
 						if(tmp > max_prec){
@@ -114,7 +117,7 @@ public class Main {
 					if(DEBUG)System.out.println("List:"+sorted_list);
 					do{
 						o = sorted_list.remove(0);
-						o.instantiate(p.getInstances(), p.getInputNames(o), stack, current_state, plan);
+						o.instantiate(p.getInstances(), p.getInputNames(o), stack, current_state, plan, p);
 						if(DEBUG)System.out.println("Select operator:"+o);
 					}while(last_used.contains(o) && sorted_list.size() > 0);
 					
