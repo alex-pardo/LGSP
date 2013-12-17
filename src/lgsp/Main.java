@@ -9,6 +9,7 @@ import java.util.Stack;
 import com.sun.xml.internal.stream.util.BufferAllocator;
 
 import utils.FileReader;
+import utils.Logger;
 import utils.Operator;
 import utils.OperatorFinder;
 import utils.Predicate;
@@ -34,9 +35,10 @@ public class Main {
 		Stack<Object> stack = new Stack<Object>();
 		State current_state = problem.getInitialState();
 		System.out.println("\n"+current_state+"\n\n");
-		
+		Logger.writeString(current_state.toString());
 		State ef = problem.getGoalState();
 		System.out.println("\n"+ef+"\n");
+		Logger.writeString(ef.toString());
 		//Create the plan
 		ArrayList<Operator> plan = new ArrayList<Operator>();
 		ArrayList<Object> last_used = new ArrayList<Object>();
@@ -162,9 +164,16 @@ public class Main {
 		}
 		
 		System.out.println("Finish the process!");
+		Logger.writeString("Final plan");
 		for(Operator o : plan){
 			System.out.println(o);
+			Logger.writeString(o.toString());
 		}
 		System.out.println(current_state);
+		Logger.writeString(current_state.toString());
+		Logger.writeString("END");
+		
+
+		Logger.closeFile();
 	}
 }

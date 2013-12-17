@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.swing.JFileChooser;
 
@@ -16,17 +17,21 @@ public final class FileReader {
 	private static final String INITIAL_STATE = "Initial_state=";
 	private static final String GOAL_STATE = "Goal_state=";
 	
-	private static String filename = System.getProperty("user.dir")+"/problem2.txt";
+	private static String[] files = {"/problems/problem1.txt","/problems/problem2.txt","/problems/problem3.txt","/problems/problem4.txt","/problems/problem5.txt"};
 	
 	public static Problem readFile(){
-		
-		/*JFileChooser fileChooser = new JFileChooser();
-		File file = null;
-		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-		  file = fileChooser.getSelectedFile();
-		  return parseFile(file);
-		}*/
+		System.out.println("Planning and Approximate Reasoning -- URV -- Fall 2013");
+		System.out.println("David Sanchez & Alex Pardo");
+		System.out.println("-- Linear Goal Stack Planner --");
+		for(int k = 1; k <= files.length; k++) System.out.println(k + ". Problem " + k);
+		System.out.println("Select one problem: ");
+		Scanner in = new Scanner(System.in);
+        int i = in.nextInt();
+		i --;
+		String filename = System.getProperty("user.dir")+files[i];
+		System.out.println(filename);
 		File file = new File(filename);
+		new Logger("Problem"+i);
 		return parseFile(file);
 		
 	}
