@@ -1,0 +1,477 @@
+Wagons=A,B,C,D,E,F,G
+Initial_state=ON-STATION(B);ON-STATION(E);ON-STATION(G);IN-FRONT-OF(A,B);IN-FRONT-OF(D,E);IN-FRONT-OF(C,D);IN-FRONT-OF(F,G);FREE(A);FREE(F);FREE(C);FREE-LOCOMOTIVE;EMPTY(B);EMPTY(D);EMPTY(E);EMPTY(F);LOADED(A);LOADED(C);LOADED(G)
+Goal_state=FREE-LOCOMOTIVE;FREE(F);FREE(G);IN-FRONT-OF(G,A);FREE(E);IN-FRONT-OF(E,B);IN-FRONT-OF(F,C);IN-FRONT-OF(C,D);ON-STATION(A);ON-STATION(B);ON-STATION(D);EMPTY(C);EMPTY(D);LOADED(A);LOADED(F);LOADED(E);EMPTY(G);EMPTY(B)
+------------------------------
+  State: Initial_state
+------------------------------
+Predicates:
+ON-STATION(B)
+ON-STATION(E)
+ON-STATION(G)
+IN-FRONT-OF(A,B)
+IN-FRONT-OF(D,E)
+IN-FRONT-OF(C,D)
+IN-FRONT-OF(F,G)
+FREE(A)
+FREE(F)
+FREE(C)
+FREE-LOCOMOTIVE
+EMPTY(B)
+EMPTY(D)
+EMPTY(E)
+EMPTY(F)
+LOADED(A)
+LOADED(C)
+LOADED(G)
+
+------------------------------
+  State: Goal_state
+------------------------------
+Predicates:
+FREE-LOCOMOTIVE
+FREE(F)
+FREE(G)
+IN-FRONT-OF(G,A)
+FREE(E)
+IN-FRONT-OF(E,B)
+IN-FRONT-OF(F,C)
+IN-FRONT-OF(C,D)
+ON-STATION(A)
+ON-STATION(B)
+ON-STATION(D)
+EMPTY(C)
+EMPTY(D)
+LOADED(A)
+LOADED(F)
+LOADED(E)
+EMPTY(G)
+EMPTY(B)
+
+Unstacking EMPTY(B)
+Unstacking EMPTY(G)
+Stacking the instantiated operator: UNLOAD(G)
+Unstacking LOADED(G)
+Unstacking ON-STATION(G)
+Unstacking LOADED(E)
+Stacking the instantiated operator: LOAD(E)
+Unstacking EMPTY(E)
+Unstacking ON-STATION(E)
+Unstacking LOADED(F)
+Stacking the instantiated operator: LOAD(F)
+Unstacking EMPTY(F)
+Unstacking ON-STATION(F)
+Stacking the instantiated operator: PARK(F)
+Unstacking N<MAX
+Stacking the instantiated operator: COUPLE(B)
+Unstacking FREE(B)
+Stacking the instantiated operator: DETACH(A,B)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(A)
+Unstacking IN-FRONT-OF(A,B)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(A,C)
+Unstacking FREE(C)
+Unstacking TOWED(A)
+Unstacking ON-STATION(B)
+Unstacking USED-RAILWAYS
+Unstacking USED-RAILWAYS
+Unstacking TOWED(F)
+Stacking the instantiated operator: DETACH(F,G)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(B,A)
+Unstacking FREE(A)
+Unstacking TOWED(B)
+Unstacking FREE(F)
+Unstacking IN-FRONT-OF(F,G)
+Unstacking LOADED(A)
+Unstacking EMPTY(D)
+Unstacking EMPTY(C)
+Stacking the instantiated operator: UNLOAD(C)
+Unstacking LOADED(C)
+Unstacking ON-STATION(C)
+Stacking the instantiated operator: PARK(C)
+Unstacking N<MAX
+Stacking the instantiated operator: COUPLE(F)
+Unstacking FREE(F)
+Unstacking FREE-LOCOMOTIVE
+Unstacking ON-STATION(F)
+Unstacking USED-RAILWAYS
+Unstacking USED-RAILWAYS
+Unstacking TOWED(C)
+Stacking the instantiated operator: DETACH(C,D)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(F,B)
+Unstacking FREE(B)
+Unstacking TOWED(F)
+Unstacking FREE(C)
+Stacking the instantiated operator: DETACH(D,C)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(D)
+Stacking the instantiated operator: DETACH(C,D)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(C)
+Stacking the instantiated operator: DETACH(A,C)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(A)
+Stacking the instantiated operator: DETACH(B,A)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(B)
+Stacking the instantiated operator: DETACH(F,B)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(F)
+Unstacking IN-FRONT-OF(F,B)
+Unstacking IN-FRONT-OF(B,A)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(F,G)
+Unstacking FREE(G)
+Unstacking TOWED(F)
+Unstacking IN-FRONT-OF(A,C)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(B,F)
+Unstacking FREE(F)
+Unstacking TOWED(B)
+Unstacking IN-FRONT-OF(C,D)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(A,B)
+Unstacking FREE(B)
+Unstacking TOWED(A)
+Unstacking IN-FRONT-OF(D,C)
+Stacking the instantiated operator: ATTACH(D,C)
+Unstacking FREE(C)
+Unstacking TOWED(D)
+Stacking the instantiated operator: DETACH(D,E)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(C,A)
+Unstacking FREE(A)
+Unstacking TOWED(C)
+Unstacking FREE(D)
+Unstacking IN-FRONT-OF(D,E)
+Unstacking IN-FRONT-OF(C,D)
+Stacking the instantiated operator: ATTACH(C,D)
+Unstacking FREE(D)
+Unstacking TOWED(C)
+Stacking the instantiated operator: DETACH(C,A)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(D,E)
+Unstacking FREE(E)
+Unstacking TOWED(D)
+Unstacking FREE(C)
+Unstacking IN-FRONT-OF(C,A)
+Unstacking ON-STATION(D)
+Stacking the instantiated operator: PARK(D)
+Unstacking N<MAX
+Stacking the instantiated operator: COUPLE(C)
+Unstacking FREE(C)
+Unstacking FREE-LOCOMOTIVE
+Unstacking ON-STATION(C)
+Unstacking USED-RAILWAYS
+Unstacking USED-RAILWAYS
+Unstacking TOWED(D)
+Stacking the instantiated operator: DETACH(D,E)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(C,A)
+Unstacking FREE(A)
+Unstacking TOWED(C)
+Unstacking FREE(D)
+Unstacking IN-FRONT-OF(D,E)
+Unstacking ON-STATION(B)
+Stacking the instantiated operator: PARK(B)
+Unstacking N<MAX
+Stacking the instantiated operator: COUPLE(E)
+Unstacking FREE(E)
+Unstacking FREE-LOCOMOTIVE
+Unstacking ON-STATION(E)
+Unstacking USED-RAILWAYS
+Unstacking USED-RAILWAYS
+Unstacking TOWED(B)
+Stacking the instantiated operator: DETACH(B,F)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(E,D)
+Unstacking FREE(D)
+Unstacking TOWED(E)
+Unstacking FREE(B)
+Stacking the instantiated operator: DETACH(F,B)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(F)
+Stacking the instantiated operator: DETACH(B,F)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(B)
+Stacking the instantiated operator: DETACH(A,B)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(A)
+Stacking the instantiated operator: DETACH(B,A)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(B)
+Stacking the instantiated operator: DETACH(F,B)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(F)
+Stacking the instantiated operator: DETACH(B,F)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(B)
+Stacking the instantiated operator: DETACH(A,B)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(A)
+Stacking the instantiated operator: DETACH(C,A)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(C)
+Unstacking IN-FRONT-OF(C,A)
+Unstacking IN-FRONT-OF(A,B)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(C,E)
+Unstacking FREE(E)
+Unstacking TOWED(C)
+Unstacking IN-FRONT-OF(B,F)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(A,C)
+Unstacking FREE(C)
+Unstacking TOWED(A)
+Unstacking IN-FRONT-OF(F,B)
+Stacking the instantiated operator: ATTACH(F,B)
+Unstacking FREE(B)
+Unstacking TOWED(F)
+Stacking the instantiated operator: DETACH(F,G)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(B,A)
+Unstacking FREE(A)
+Unstacking TOWED(B)
+Unstacking FREE(F)
+Unstacking IN-FRONT-OF(F,G)
+Unstacking IN-FRONT-OF(B,A)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(F,G)
+Unstacking FREE(G)
+Unstacking TOWED(F)
+Unstacking IN-FRONT-OF(A,B)
+Stacking the instantiated operator: ATTACH(A,B)
+Unstacking FREE(B)
+Unstacking TOWED(A)
+Stacking the instantiated operator: DETACH(A,C)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(B,F)
+Unstacking FREE(F)
+Unstacking TOWED(B)
+Unstacking FREE(A)
+Unstacking IN-FRONT-OF(A,C)
+Unstacking IN-FRONT-OF(B,F)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(A,C)
+Unstacking FREE(C)
+Unstacking TOWED(A)
+Unstacking IN-FRONT-OF(F,B)
+Stacking the instantiated operator: ATTACH(F,B)
+Unstacking FREE(B)
+Unstacking TOWED(F)
+Stacking the instantiated operator: DETACH(F,G)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(B,A)
+Unstacking FREE(A)
+Unstacking TOWED(B)
+Unstacking FREE(F)
+Unstacking IN-FRONT-OF(F,G)
+Unstacking IN-FRONT-OF(B,F)
+Stacking the instantiated operator: ATTACH(B,F)
+Unstacking FREE(F)
+Unstacking TOWED(B)
+Stacking the instantiated operator: DETACH(B,A)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(F,G)
+Unstacking FREE(G)
+Unstacking TOWED(F)
+Unstacking FREE(B)
+Unstacking IN-FRONT-OF(B,A)
+Unstacking ON-STATION(A)
+Stacking the instantiated operator: PARK(A)
+Unstacking N<MAX
+Stacking the instantiated operator: COUPLE(B)
+Unstacking FREE(B)
+Unstacking FREE-LOCOMOTIVE
+Unstacking ON-STATION(B)
+Unstacking USED-RAILWAYS
+Unstacking USED-RAILWAYS
+Unstacking TOWED(A)
+Stacking the instantiated operator: DETACH(A,C)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(B,F)
+Unstacking FREE(F)
+Unstacking TOWED(B)
+Unstacking FREE(A)
+Unstacking IN-FRONT-OF(A,C)
+Unstacking IN-FRONT-OF(C,D)
+Stacking the instantiated operator: ATTACH(C,D)
+Unstacking FREE(D)
+Stacking the instantiated operator: DETACH(E,D)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(E)
+Stacking the instantiated operator: DETACH(C,E)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(C)
+Unstacking IN-FRONT-OF(C,E)
+Unstacking IN-FRONT-OF(E,D)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(C,B)
+Unstacking FREE(B)
+Unstacking TOWED(C)
+Unstacking TOWED(C)
+Stacking the instantiated operator: DETACH(C,B)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(E,A)
+Unstacking FREE(A)
+Unstacking TOWED(E)
+Unstacking FREE(C)
+Unstacking IN-FRONT-OF(C,B)
+Unstacking IN-FRONT-OF(F,C)
+Stacking the instantiated operator: ATTACH(F,C)
+Unstacking FREE(C)
+Unstacking TOWED(F)
+Stacking the instantiated operator: DETACH(F,G)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(F)
+Stacking the instantiated operator: DETACH(B,F)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(B)
+Unstacking IN-FRONT-OF(B,F)
+Unstacking IN-FRONT-OF(F,G)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(B,C)
+Unstacking FREE(C)
+Unstacking TOWED(B)
+Unstacking FREE(C)
+Stacking the instantiated operator: DETACH(B,C)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(F,B)
+Unstacking FREE(B)
+Unstacking TOWED(F)
+Unstacking FREE(B)
+Stacking the instantiated operator: DETACH(F,B)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(F)
+Unstacking IN-FRONT-OF(F,B)
+Unstacking IN-FRONT-OF(B,C)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(F,E)
+Unstacking FREE(E)
+Unstacking TOWED(F)
+Unstacking TOWED(F)
+Stacking the instantiated operator: DETACH(F,E)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(B,G)
+Unstacking FREE(G)
+Unstacking TOWED(B)
+Unstacking FREE(F)
+Unstacking IN-FRONT-OF(F,E)
+Unstacking IN-FRONT-OF(E,B)
+Stacking the instantiated operator: ATTACH(E,B)
+Unstacking FREE(B)
+Unstacking TOWED(E)
+Stacking the instantiated operator: DETACH(E,A)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(E)
+Unstacking IN-FRONT-OF(E,A)
+Unstacking FREE(E)
+Unstacking IN-FRONT-OF(G,A)
+Stacking the instantiated operator: ATTACH(G,A)
+Unstacking FREE(A)
+Unstacking TOWED(G)
+Stacking the instantiated operator: COUPLE(G)
+Unstacking FREE(G)
+Stacking the instantiated operator: DETACH(B,G)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(B)
+Stacking the instantiated operator: DETACH(E,B)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(E)
+Unstacking IN-FRONT-OF(E,B)
+Unstacking IN-FRONT-OF(B,G)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(E,A)
+Unstacking FREE(A)
+Unstacking TOWED(E)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(B,E)
+Unstacking FREE(E)
+Unstacking TOWED(B)
+Unstacking ON-STATION(G)
+Unstacking USED-RAILWAYS
+Unstacking FREE(A)
+Stacking the instantiated operator: DETACH(E,A)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(G,B)
+Unstacking FREE(B)
+Unstacking TOWED(G)
+Unstacking FREE(E)
+Stacking the instantiated operator: DETACH(B,E)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(B)
+Stacking the instantiated operator: DETACH(G,B)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(G)
+Unstacking IN-FRONT-OF(G,B)
+Unstacking IN-FRONT-OF(B,E)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(G,F)
+Unstacking FREE(F)
+Unstacking TOWED(G)
+Unstacking IN-FRONT-OF(E,A)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: PARK(B)
+Unstacking N<MAX
+Unstacking USED-RAILWAYS
+Unstacking TOWED(B)
+Unstacking TOWED(G)
+Stacking the instantiated operator: DETACH(G,F)
+Unstacking FREE-LOCOMOTIVE
+Stacking the instantiated operator: ATTACH(E,B)
+Unstacking FREE(B)
+Unstacking TOWED(E)
+Unstacking FREE(G)
+Unstacking IN-FRONT-OF(G,F)
+Unstacking FREE(G)
+Unstacking FREE(F)
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE-LOCOMOTIVE
+Unstacking FREE(F)
+Unstacking FREE(G)
+Unstacking IN-FRONT-OF(G,A)
+Unstacking FREE(E)
+Unstacking IN-FRONT-OF(E,B)
+Unstacking IN-FRONT-OF(F,C)
+Unstacking IN-FRONT-OF(C,D)
+Unstacking ON-STATION(A)
+Unstacking ON-STATION(B)
+Unstacking ON-STATION(D)
+Unstacking EMPTY(C)
+Unstacking EMPTY(D)
+Unstacking LOADED(A)
+Unstacking LOADED(F)
+Unstacking LOADED(E)
+Unstacking EMPTY(G)
+Unstacking EMPTY(B)
+---------------------------
+---------------------------
+
+Final plan
+UNLOAD(G) -> LOAD(E) -> DETACH(A,B) -> ATTACH(A,C) -> COUPLE(B) -> ATTACH(B,A) -> DETACH(F,G) -> PARK(F) -> LOAD(F) -> COUPLE(F) -> ATTACH(F,B) -> DETACH(F,B) -> ATTACH(F,G) -> DETACH(B,A) -> ATTACH(B,F) -> DETACH(A,C) -> ATTACH(A,B) -> DETACH(C,D) -> ATTACH(C,A) -> DETACH(D,E) -> ATTACH(D,C) -> DETACH(D,C) -> ATTACH(D,E) -> DETACH(C,A) -> ATTACH(C,D) -> DETACH(C,D) -> PARK(C) -> UNLOAD(C) -> COUPLE(C) -> ATTACH(C,A) -> DETACH(D,E) -> PARK(D) -> COUPLE(E) -> ATTACH(E,D) -> DETACH(C,A) -> ATTACH(C,E) -> DETACH(A,B) -> ATTACH(A,C) -> DETACH(B,F) -> ATTACH(B,A) -> DETACH(F,G) -> ATTACH(F,B) -> DETACH(F,B) -> ATTACH(F,G) -> DETACH(B,A) -> ATTACH(B,F) -> DETACH(A,C) -> ATTACH(A,B) -> DETACH(A,B) -> ATTACH(A,C) -> DETACH(B,F) -> ATTACH(B,A) -> DETACH(F,G) -> ATTACH(F,B) -> DETACH(F,B) -> ATTACH(F,G) -> DETACH(B,A) -> ATTACH(B,F) -> DETACH(B,F) -> PARK(B) -> COUPLE(B) -> ATTACH(B,F) -> DETACH(A,C) -> PARK(A) -> DETACH(C,E) -> ATTACH(C,B) -> DETACH(E,D) -> ATTACH(E,A) -> DETACH(C,B) -> ATTACH(C,D) -> DETACH(B,F) -> ATTACH(B,C) -> DETACH(F,G) -> ATTACH(F,B) -> DETACH(F,B) -> ATTACH(F,E) -> DETACH(B,C) -> ATTACH(B,G) -> DETACH(F,E) -> ATTACH(F,C) -> DETACH(E,A) -> ATTACH(E,B) -> DETACH(E,B) -> ATTACH(E,A) -> DETACH(B,G) -> ATTACH(B,E) -> COUPLE(G) -> ATTACH(G,B) -> DETACH(G,B) -> ATTACH(G,F) -> DETACH(B,E) -> PARK(B) -> DETACH(E,A) -> ATTACH(E,B) -> DETACH(G,F) -> ATTACH(G,A)
+------------------------------
+  State: 96
+------------------------------
+Predicates:
+EMPTY(B)
+EMPTY(D)
+LOADED(A)
+EMPTY(G)
+LOADED(E)
+LOADED(F)
+EMPTY(C)
+ON-STATION(D)
+ON-STATION(A)
+IN-FRONT-OF(C,D)
+IN-FRONT-OF(F,C)
+FREE(G)
+FREE(E)
+ON-STATION(B)
+IN-FRONT-OF(E,B)
+FREE(F)
+IN-FRONT-OF(G,A)
+FREE-LOCOMOTIVE
+
+END

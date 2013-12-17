@@ -2,6 +2,11 @@ package utils;
 
 import java.util.ArrayList;
 
+/**
+ * Represents an state of the problem
+ * @author Alex Pardo & David Sanchez
+ *
+ */
 public class State {
 
 	private ArrayList<Predicate> predicates;
@@ -26,6 +31,11 @@ public class State {
 		return predicates;
 	}
 	
+	/** 
+	 * Checks if the state has this predicate 
+	 * @param p
+	 * @return
+	 */
 	public boolean hasThisPredicate(Predicate p){
 		
 		if(p.getName().equals("USED-RAILWAYS")){
@@ -42,18 +52,34 @@ public class State {
 		return false;
 	}
 	
+	/**
+	 * Checks if the used railways is equal to a certain number
+	 * @param n
+	 * @return
+	 */
 	public boolean hasNRailways(int n){
 		return n == used_railways;
 	}
 	
+	/**
+	 * Checks if the used railways is lower than a certain number
+	 * @param n
+	 * @return
+	 */
 	public boolean railwaysLower(int n){
-		return n < used_railways;
+		return n >= used_railways;
 	}
 	
+	/**
+	 * Increases the number of used railways
+	 */
 	public void increaseN(){
 		used_railways++;
 	}
 	
+	/**
+	 * Decreases the number of used railways
+	 */
 	public void decreaseN(){
 		used_railways--;
 	}
@@ -73,6 +99,10 @@ public class State {
 		
 		return output;
 	}
+	/**
+	 * Deletes a certain predicate
+	 * @param d
+	 */
 	public void delPredicate(Predicate d) {
 		int pos = -1;
 		for(int i = 0; i < predicates.size(); i++){
@@ -82,10 +112,7 @@ public class State {
 			predicates.remove(pos);
 		}
 	}
-	public void hasInstantiatedPredicate(Predicate a, Wagon wagon) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 	
 	public ArrayList<Predicate> getPredicate(Predicate a){
 		ArrayList<Predicate> out = new ArrayList<Predicate>();

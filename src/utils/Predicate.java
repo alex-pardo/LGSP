@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class used to represent a certain predicate
+ * @author Alex Pardo & David Sanchez
+ *
+ */
 public class Predicate {
 
 	//Number of the parameters at each predicate
@@ -58,6 +63,10 @@ public class Predicate {
 		}
 	}
 	
+	/**
+	 * Adds an instantiation object
+	 * @param object
+	 */
 	public void Instantiate(Object object){
 		if(type < 8 && type != 3){
 			input = new ArrayList<Object>();
@@ -69,7 +78,7 @@ public class Predicate {
 	
 	
 	/**
-	 * append instances
+	 * Appends instances
 	 * @param objects
 	 */
 	public void addInstance(ArrayList<Object> objects){
@@ -80,7 +89,11 @@ public class Predicate {
 		}
 	}
 	
-	
+	/**
+	 * Returns if the two strings are the same
+	 * @param name
+	 * @return
+	 */
 	public boolean equalsName(String name){
 		return TYPES[type].equals(name);
 	}
@@ -123,6 +136,12 @@ public class Predicate {
 		return input;
 	}
 
+	/**
+	 * Returns the number of equal instances it has 
+	 * @param instances
+	 * @param o
+	 * @return
+	 */
 	public int hasInstances(ArrayList<Object> instances, Object o){
 		int result = 0;
 		int null_pos = -1;
@@ -143,6 +162,12 @@ public class Predicate {
 		return inputNames;
 	}
 
+	/**
+	 * Return the input names for a certain operator
+	 * (Notice that x and y might change from getInputNames w/o parameters)
+	 * @param o
+	 * @return
+	 */
 	public List<String> getInputNames(Operator o) {
 		ArrayList<String> tmp = new ArrayList<String>();
 		switch(o.getOp_type()){

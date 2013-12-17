@@ -2,6 +2,11 @@ package utils;
 
 import java.util.ArrayList;
 
+/**
+ * Class used to retrieve the clean operators
+ * @author Alex Pardo & David Sanchez
+ *
+ */
 public final class OperatorFinder {
 
 	
@@ -15,6 +20,11 @@ public final class OperatorFinder {
 		}
 	}
 	
+	/**
+	 * Returns the operator that has the predicate in the add list
+	 * @param p
+	 * @return
+	 */
 	public ArrayList<Operator> findOperator(Predicate p) {
 		
 		ArrayList<Operator> matching_operator = new ArrayList<Operator>();

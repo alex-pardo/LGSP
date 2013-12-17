@@ -1,6 +1,11 @@
 package utils;
 
-public class Wagon extends Constant {
+/** 
+ * Class used to represent the wagons
+ * @author Alex Pardo & David Sanchez
+ *
+ */
+public class Wagon  {
 
 	private String wagon_name;
 	

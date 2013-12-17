@@ -5,7 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 
-
+/**
+ * Creates the predicates of the system
+ * @author Alex Pardo & David Sanchez
+ *
+ */
 public final class PredicateCreator {
 
 	public static final String ON_STATION = "ON-STATION";

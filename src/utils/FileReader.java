@@ -19,6 +19,10 @@ public final class FileReader {
 	
 	private static String[] files = {"/problems/problem1.txt","/problems/problem2.txt","/problems/problem3.txt","/problems/problem4.txt","/problems/problem5.txt"};
 	
+	/**
+	 * Reads a file and parses it
+	 * @return
+	 */
 	public static Problem readFile(){
 		System.out.println("Planning and Approximate Reasoning -- URV -- Fall 2013");
 		System.out.println("David Sanchez & Alex Pardo");
@@ -31,17 +35,19 @@ public final class FileReader {
 		String filename = System.getProperty("user.dir")+files[i];
 		System.out.println(filename);
 		File file = new File(filename);
-		new Logger("Problem"+i);
+		new Logger("Problem"+(i+1));
 		return parseFile(file);
 		
 	}
 	
+	/*
+	 * Parse a problem file
+	 */
 	private static Problem parseFile(File f){
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new java.io.FileReader(f));
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -53,14 +59,12 @@ public final class FileReader {
 				text.concat(line);
 			}
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
 		try {
 			br.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -71,8 +75,11 @@ public final class FileReader {
 		int i3 = text.indexOf(GOAL_STATE);
 		
 		System.out.println(text.substring(i1, i2));
+		Logger.writeString(text.substring(i1, i2));
 		System.out.println(text.substring(i2, i3));
+		Logger.writeString(text.substring(i2, i3));
 		System.out.println(text.substring(i3));
+		Logger.writeString(text.substring(i3));
 		
 		
 		ArrayList<Wagon> wagons = parseWagons(text.substring(i1, i2));
@@ -84,6 +91,9 @@ public final class FileReader {
 		return problem;
 	}
 	
+	/*
+	 * Parses the wagons
+	 */
 	private static ArrayList<Wagon> parseWagons(String s){
 		ArrayList<Wagon> wagons = new ArrayList<Wagon>();
 		
@@ -96,6 +106,9 @@ public final class FileReader {
 		return wagons;
 	}
 	
+	/*
+	 * Parses the states
+	 */
 	private static State parseState(String input, ArrayList<Wagon> w){
 		
 		int equal = input.indexOf("=");

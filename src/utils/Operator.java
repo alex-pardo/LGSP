@@ -6,7 +6,12 @@ import java.util.List;
 import java.util.Stack;
 
 
-
+/**
+ * Defines an operator, its preconditions, add and delete list
+ * 
+ * @author Alex Pardo & David Sanchez
+ *
+ */
 public class Operator {
 
 	
@@ -54,7 +59,9 @@ public class Operator {
 		
 		return val;
 	}
-	
+	/*
+	 * Create the list used for the instantiation
+	 */
 	private void constructLists() {
 		preconditions = new ArrayList<Predicate>();
 		add = new ArrayList<Predicate>();
@@ -188,6 +195,11 @@ public class Operator {
 		
 	}
 
+	/**
+	 * Returns whether an operator has a predicate on its add list
+	 * @param p
+	 * @return
+	 */
 	public boolean hasAdd(Predicate p){
 		boolean value = false;
 		for(Predicate a : add){
@@ -201,6 +213,11 @@ public class Operator {
 		return false;
 	}
 
+	/**
+	 * Applies the operator to an state
+	 * @param current_state
+	 * @return
+	 */
 	public State apply(State current_state) {
 		
 		for(Predicate a : add){
@@ -224,6 +241,11 @@ public class Operator {
 		return current_state;
 	}
 	
+	/**
+	 * Checks if the preconditions of the operator are satisfied in an specific state
+	 * @param s
+	 * @return
+	 */
 	public double preconditionsAccomplished(State s){
 		double return_val = 0;
 		double total_precs = preconditions.size();
@@ -244,6 +266,12 @@ public class Operator {
 		return return_val/total_precs;
 	}
 
+	/*
+	 * ##########################################################################
+	 * 							Getters and setters
+	 * ##########################################################################
+	 */
+	
 	
 	public String getName() {
 		return name;
@@ -305,6 +333,13 @@ public class Operator {
 		delete = replaceInput(delete, input);
 		preconditions = replaceInput(preconditions, input);
 	}
+	
+	/*
+	 * ########################################################################## 
+	 * 							END Getters and setters
+	 * ##########################################################################
+	 */
+	
 
 	private ArrayList<Predicate> replaceInput(ArrayList<Predicate> list, ArrayList<Object> input){
 		ArrayList<Predicate> tmp = new ArrayList<Predicate>();
@@ -342,7 +377,15 @@ public class Operator {
 	
 
 	
-	
+	/**
+	 * Instantiates the operator by using some metrics
+	 * @param instances
+	 * @param names
+	 * @param s
+	 * @param curr
+	 * @param plan
+	 * @param fs
+	 */
 	public void instantiate(ArrayList<Object> instances, List<String> names, Stack<Object> s, State curr, ArrayList<Operator> plan, State fs){
 		if(input == null){
 			
@@ -407,60 +450,20 @@ public class Operator {
 												if(tmp.getName().equals("ON-STATION") && name.equals("COUPLE") && tmp.getInput().get(0).equals(w)) weight += 3;
 												if(!first_null && tmp.getName().equals("IN-FRONT-OF") && name.equals("DETACH") && tmp.getInput().get(0).equals(first_wagon) && tmp.getInput().get(1).equals(w)) weight += 5;
 												if(!first_null && tmp.getName().equals("IN-FRONT-OF") && name.equals("DETACH") && (tmp.getInput().get(0).equals(w) || tmp.getInput().get(1).equals(w))) weight += 3;
-												//if(tmp.getName().equals("FREE") && name.equals("DETACH")&& tmp.getInput().get(0).equals(w)) weight += 2;
 												if(tmp.getName().equals("TOWED") && name.equals("PARK")&& tmp.getInput().get(0).equals(w)) weight += 1;
 												if(tmp.getName().equals("ON-STATION") && name.equals("LOAD")&& tmp.getInput().get(0).equals(w)) weight += 3;
 												if(tmp.getName().equals("ON-STATION") && name.equals("UNLOAD")&& tmp.getInput().get(0).equals(w)) weight += 3;
-												// check if we are deleting a predicate on the final state by selecting this Wagon
 																							
 												if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1*weight;
 											}
 										}
 									}
 									
-									//System.out.println("Wagon:"+w.getName() + " counter:"+tmp_counter+" a:"+a.getName());
-									//int depth = 0;
-//									for(Object element : s){
-//										depth ++;
-//										if(element instanceof Predicate){
-//											Predicate tmp = (Predicate) element;
-//											if(tmp == null || tmp.getInstances() == null) continue;
-//											if(tmp.equalsName(a.getName())){
-//												for(Object o : tmp.getInstances()){
-//													if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1;
-//												}
-//											}
-//										}
-//										if(depth > 5) break;
-//																			
-//									}
-									
-//									if( curr_p.equalsName("USED_RAILWAYS") && curr_p.getInputNames().equals(Operator.nminus1)){
-//										int depth = 0;
-//										Object element;
-//										for(int pos = s.size()-1; pos >= 0; pos--){
-//										//for(Object element : s){
-//											element = s.get(pos);
-//											depth ++;
-//											if(element instanceof Predicate){
-//												Predicate tmp = (Predicate) element;
-//												if(tmp == null || tmp.getInstances() == null) continue;
-//												if(tmp.equalsName(a.getName())){
-//													for(Object o : tmp.getInstances()){
-//														if(((Wagon) o).nameEquals(w.getName())) tmp_counter+=1;
-//													}
-//												}
-//											}
-//											if(depth > 5) break;
-//																				
-//										}
-//									}
 								}
 								
 								
 								
 								Tuple<Integer, Wagon> tuple;
-								//System.out.println(w + ": " + tmp_counter);
 								
 								if(tmp_counter > max_wagon){
 									max_wagon = tmp_counter;
@@ -676,12 +679,15 @@ public class Operator {
 	}
 
 
-	public ArrayList<Predicate> getArrayPrecs() {
-		
-		return preconditions;
-	}
 	
 	
+	/**
+	 * Class used on the instantiation
+	 * 
+	 *
+	 * @param <X>
+	 * @param <Y>
+	 */
 	public class Tuple<X, Y> { 
 		  public final X x; 
 		  public final Y y; 

@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import utils.State;
 import utils.Wagon;
 
+/**
+ * This class represents the problem we are solving
+ * @author Alex Pardo & David Sanchez
+ *
+ */
 public class Problem {
 
 	

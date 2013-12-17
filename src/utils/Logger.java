@@ -6,6 +6,11 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Class used to log the results into a file
+ * @author Alex Pardo & David Sanchez
+ *
+ */
 public final class Logger {
 
 	private static BufferedWriter bw;
@@ -24,6 +29,10 @@ public final class Logger {
 		
 	}
 	
+	/**
+	 * Writes an string and adds an EOL character
+	 * @param line
+	 */
 	public static void writeString(String line){
 		try {
 			bw.write(line);
@@ -34,6 +43,23 @@ public final class Logger {
 		}
 	}
 	
+	/**
+	 * Writes an string WITHOUT adding an EOL character
+	 * @param line
+	 */
+	public static void writeStringInLine(String line) {
+		try {
+			bw.write(line);
+		} catch (IOException e) {
+			System.out.println("Problem writing to file");
+			System.exit(0);
+		}
+		
+	}
+	
+	/**
+	 * Closes the opened file
+	 */
 	public static void closeFile(){
 		try {
 			bw.close();
@@ -43,4 +69,6 @@ public final class Logger {
 		}
 		
 	}
+
+	
 }
